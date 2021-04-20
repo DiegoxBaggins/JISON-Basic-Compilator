@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import InicioSesion from "./components/InicioSesion";
+import Base from "./components/Base";
 
 
 
@@ -11,7 +11,7 @@ class Router extends Component{
             <BrowserRouter>
                 {/* Configurar rutas y paginas*/}
                 <Switch>
-                    <Route exact path="/" component={InicioSesion} />
+                    <Route exact path="/" component={Base} />
                 </Switch>
 
             </BrowserRouter>
