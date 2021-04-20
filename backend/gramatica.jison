@@ -1,8 +1,3 @@
-
-/**
- * Ejemplo mi primer proyecto con Jison utilizando Nodejs en Ubuntu
- */
-
 /* Definición Léxica */
 %lex
 
@@ -78,8 +73,6 @@
 "exec"              return 'EXEC';
 
 
-
-
 /* Espacios en blanco */
 [ \r\t]+            {}
 \n                  {}
@@ -101,7 +94,7 @@
 %left 'IGUALDAD' 'DIFERENTE' 'MENOR' 'MENORIGUAL' 'MAYOR' 'MAYORIGUAL'
 %left 'MAS' 'MENOS'
 %left 'POR' 'DIVIDIDO'
-%left 'POTENCIA'
+% 'POTENCIA'
 %left UMENOS
 
 %start ini

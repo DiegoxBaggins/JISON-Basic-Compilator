@@ -1,0 +1,15 @@
+import React from 'react';
+
+const Footer = () => {
+    return(
+        <footer id="footer">
+            <div className="center">
+                <p>
+                    &copy; TypeSty by Diego Sierra - 201903969
+                </p>
+            </div>
+        </footer>
+    )
+}
+
+export default Footer;
