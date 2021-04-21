@@ -14,8 +14,7 @@ class Base extends Component{
             text2: ''
         };
 
-        this.handleChange1 = this.handleChange2.bind(this);
-        this.handleChange2 = this.handleChange2.bind(this);
+        this.handleChange1 = this.handleChange1.bind(this);
     }
 
     onFileChange = event => {
@@ -23,12 +22,33 @@ class Base extends Component{
         this.setState({ selectedFile: event.target.files[0] });
     };
 
-    handleChange1 (event) {
-        this.setState({text1: event.target.value});
+    onFileUpload = () => {
+        const formData = new FormData();
+        formData.append(
+            "myFile",
+            this.state.selectedFile,
+            this.state.selectedFile.name
+        );
+        axios.post(`${Server}/compilador/archivo`, formData).then( (response) =>{
+            this.setState({
+                text1 : response.data
+            });
+        });
+    };
+
+    compilar = () => {
+        let texto = {
+            text: this.state.text1
+        }
+        console.log(texto)
+        axios.post(`${Server}/compilador/texto`, texto).then(function (response) {
+            console.log(response);
+            console.log(response.data);
+        });
     }
 
-    handleChange2 (event) {
-        this.setState({text2: event.target.value});
+    handleChange1 (event) {
+        this.setState({text1: event.target.value});
     }
 
     ConsultarDatos = async(e) => {
@@ -67,7 +87,7 @@ class Base extends Component{
                 <div className="subheader">
                     <h3> Compilador en linea </h3>
                     <input type="file" onChange={this.onFileChange} className="btn-upload" />
-                    <button  className="btn-upload"> Abrir </button>
+                    <button  className="btn-upload" onClick={this.onFileUpload}> Abrir </button>
                     <input type="button" value="Guardar"  className="btn-upload"/>
                     <br/>
                 </div>
@@ -79,13 +99,13 @@ class Base extends Component{
                     <textarea id="txt1" value={this.state.text1} onChange={this.handleChange1} className="txtArea"/>
                 </div>
                 <div className="div-medio">
-                    <input type="button" value="Compilar"  className="btn-upload"/>
+                    <input type="button" value="Compilar"  onClick={this.compilar} className="btn-upload"/>
                     <input type="button" value="Reporte AST"  className="btn-upload"/>
                     <input type="button" value="Gramaticas"  className="btn-upload"/>
                 </div>
                 <div className="div-txt">
                     <label htmlFor="txt2">Salida:</label>
-                    <textarea id="txt2" value={this.state.text2} onChange={this.handleChange2} className="txtArea" readOnly/>
+                    <textarea id="txt2" value={this.state.text2} className="txtArea" readOnly/>
                 </div>
                 <div className="clearfix"> </div>
                 <h2>Tabla de errores</h2>
