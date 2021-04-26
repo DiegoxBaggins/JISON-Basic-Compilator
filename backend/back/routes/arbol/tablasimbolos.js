@@ -1,15 +1,15 @@
 const TIPO_DATO = {
-    INTEGER:        'VAL_INTEGER',
-    DECIMAL:        'VAL_DECIMAL',
+    ENTERO:         'VAL_ENTERO',
+    DOUBLE:         'VAL_DOUBLE',
     CHAR:           'VAL_CHAR',
-    CADENA:         'VAL_CADENA',
-    BOOL:           'VAL-BOOL'
+    STRING:         'VAL_STRING',
+    BOOL:           'VAL_BOOL',
+    VECTOR:         'VAL_VECTOR',
+    LISTA:          'VAL_LISTA'
 }
 
-function crearSimbolo(linea, columna, tipo, tipo2, id, valor){
+function crearSimbolo(tipo, tipo2, id, valor){
     return {
-        linea: linea,
-        columna: columna,
         tipo: tipo,
         tipo2: tipo2,
         id: id,
@@ -22,11 +22,29 @@ class TablaS {
         this._simbolos = simbolos;
     }
 
-    agregar(linea, columna, tipo, tipo2, id, valor){
-        if(tipo === valor.tipo){
-
+    agregar(tipo, tipo2, id, valor){
+        let simbolo = this.obtener(id);
+        if(simbolo !== undefined){
+            console.log("simbolo ya existe")
         }else{
-            console.log('error semantico');
+            if(tipo === valor.tipo){
+                this._simbolos.push(crearSimbolo(tipo, tipo2, id, valor.valor))
+                console.log("simbolo registrado con exito");
+            }else{
+                console.log('error semantico');
+            }
         }
     }
+
+    obtener(id){
+        return this._simbolos.filter((simbolo) => simbolo.id === id)[0];
+    }
+
+    get simbolos(){
+        return this._simbolos;
+    }
+
 }
+
+module.exports.TIPO_DATO = TIPO_DATO;
+module.exports.TablaS = TablaS;

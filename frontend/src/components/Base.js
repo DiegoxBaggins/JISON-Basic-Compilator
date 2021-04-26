@@ -11,7 +11,7 @@ class Base extends Component{
         this.state = {
             selectedFile: null,
             text1: 'Programa aqui',
-            text2: ''
+            text2: 'Resultado'
         };
 
         this.handleChange1 = this.handleChange1.bind(this);
@@ -40,10 +40,10 @@ class Base extends Component{
         let texto = {
             text: this.state.text1
         }
-        console.log(texto)
-        axios.post(`${Server}/compilador/texto`, texto).then(function (response) {
-            console.log(response);
-            console.log(response.data);
+        axios.post(`${Server}/compilador/texto`, texto).then( (response) =>{
+            this.setState({
+                text2: response.data
+            })
         });
     }
 
@@ -51,32 +51,8 @@ class Base extends Component{
         this.setState({text1: event.target.value});
     }
 
-    ConsultarDatos = async(e) => {
-        e.preventDefault();
-        let usuario = {
-        }
-        console.log(usuario)
-        await axios.post(`${Server}/ingresar`, usuario).then( (response) => {
-            console.log(response.data);
-            let respuesta = response.data
-            if (respuesta === "F"){
-                alert("Datos erroneos");
-            }else{
-                if (respuesta === "A"){
-                    localStorage.setItem('DPI',this.dpiRef.current.value);
-                    localStorage.setItem('Tipo',"Admin");
-                    this.setState({
-                        redirect: "/admin"
-                    })
-                }else{
-                    localStorage.setItem('DPI',this.dpiRef.current.value);
-                    localStorage.setItem('Tipo',"Usuario");
-                    this.setState({
-                        redirect: "/Home"
-                    })
-                }
-            }
-        });
+    handleChange2 (event) {
+        this.setState({text2: event.target.value});
     }
 
     render(){
@@ -105,7 +81,7 @@ class Base extends Component{
                 </div>
                 <div className="div-txt">
                     <label htmlFor="txt2">Salida:</label>
-                    <textarea id="txt2" value={this.state.text2} className="txtArea" readOnly/>
+                    <textarea id="txt2" value={this.state.text2} onChange={this.handleChange2} className="txtArea" readOnly/>
                 </div>
                 <div className="clearfix"> </div>
                 <h2>Tabla de errores</h2>

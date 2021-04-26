@@ -30,7 +30,6 @@
 ";"                 return 'PTCOMA';
 ":"                 return 'DOSPUNTOS';
 ","                 return 'COMA';
-"."                 return 'PUNTO';
 "("                 return 'PARIZQ';
 ")"                 return 'PARDER';
 "["                 return 'CORIZQ';
@@ -91,18 +90,19 @@
 [ \r\t]+            {}
 \n                  {}
 
+[0-9]+("."[0-9]+)\b            return 'DECIMAL';
 [0-9]+\b                        return 'ENTERO';
-[0-9]+("."[0-9]+)*\b             return 'DECIMAL';
 ([a-zA-Z])[a-zA-Z0-9_]*         return 'IDENTIFICADOR';
 \'[^\']\'                       { yytext = yytext.substr(1, yyleng-2); return 'CHAR'; }
 \"[^\"]*\"                      { yytext = yytext.substr(1, yyleng-2); return 'CADENA'; }
 
-//con slash invertido
+//con slash invertido o con problemas
 "\n"                return 'SALTOLINEA';
 "\\"                return 'INVERTIDA';
 "\t"                return 'TABULACION';
 "\'"                return 'COMILLA';
 "\""                return 'COMILLAS';
+"."                 return 'PUNTO';
 
 <<EOF>>                 return 'EOF';
 
@@ -110,12 +110,16 @@
 /lex
 
 %{//importar de otras clases
-
+    const instrucciones = require('../arbol/instrucciones').INSTRUCCION;
+    const tipoOperacion = require('../arbol/instrucciones').TIPO_OPERACION;
+    const tipoValor = require('../arbol/instrucciones').TIPO_VALOR;
+    const tipoDato = require('../arbol/tablasimbolos').TIPO_DATO;
 %}
 
 /* Asociación de operadores y precedencia */
 
 %left 'IGUAL'
+%left 'INTERR'
 %left 'OR'
 %left 'AND'
 %right 'NOT'
@@ -126,48 +130,56 @@
 %left  'POR' 'DIVIDIDO' 'MODULO'
 %right 'POTENCIA'
 %right UMENOS
+%right UCASTEO
 %left 'PARIZQ' 'PARDER' 'LLAVIZQ' 'LLAVDER'
 
 %start INICIO
 %% /* Definición de la gramática */
 
 INICIO
-	: CUERPO EOF  {console.log('Lectura Correcta');}
-;
-
-CUERPO
-    :INSTRUCCIONES
+	: INSTRUCCIONES EOF  {console.log('Lectura Correcta'); return $1;}
 ;
 
 TIPO
-    :IDENENTERO
-    |IDENDOUBLE
-    |IDENBOOL
-    |IDENCHAR
-    |IDENSTRING
+    :IDENENTERO                     { $$ = tipoDato.ENTERO; }
+    |IDENDOUBLE                     { $$ = tipoDato.DOUBLE; }
+    |IDENBOOL                       { $$ = tipoDato.BOOL; }
+    |IDENCHAR                       { $$ = tipoDato.CHAR; }
+    |IDENSTRING                     { $$ = tipoDato.STRING; }
 ;
 
 EXP
-    :EXP MAS EXP
-    |EXP MENOS EXP
-    |EXP POR EXP
-    |EXP DIVIDIDO EXP
-    |EXP POTENCIA EXP
-    |EXP MODULO EXP
-    |PARIZQ EXP PARDER
-    |MENOS EXP %prec UMENOS
-    |EXP SUMA2
-    |EXP RESTA2
-    |ENTERO
-    |DECIMAL
-    |CHAR
-    |CADENA
-    |TRUE
-    |FALSE
-    |IDENTIFICADOR
-    |INSTRETUR
-    |IDENTIFICADOR CORIZQ EXP CORDER
-    |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER
+    :EXP IGUALDAD EXP               { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.IGUALDAD, $1, $3); }
+    |EXP DIFERENTE EXP              { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.DIFERENTE, $1, $3); }
+    |EXP MENOR EXP                  { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MENOR, $1, $3); }
+    |EXP MENORIGUAL EXP             { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MENORIGUAL, $1, $3); }
+    |EXP MAYOR EXP                  { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MAYOR, $1, $3); }
+    |EXP MAYORIGUAL EXP             { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MAYORIGUAL, $1, $3); }
+    |EXP OR EXP                     { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.OR, $1, $3); }
+    |EXP AND EXP                    { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.AND, $1, $3); }
+    |EXP MAS EXP                    { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.SUMA, $1, $3); }
+    |EXP MENOS EXP                  { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.RESTA, $1, $3); }
+    |EXP POR EXP                    { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MULTIPLICACION, $1, $3); }
+    |EXP DIVIDIDO EXP               { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.DIVISON, $1, $3); }
+    |EXP POTENCIA EXP               { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.POTENCIA, $1, $3); }
+    |EXP MODULO EXP                 { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MODULO, $1, $3); }
+    |PARIZQ EXP PARDER              { $$ = $2; }
+    |MENOS EXP %prec UMENOS         { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.MENOS, $2); }
+    |NOT EXP                        { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.NOT, $2); }
+    |EXP SUMA2                      { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.ADICION, $1); }
+    |EXP RESTA2                     { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.SUSTRACCION, $1); }
+    |DEFTER                         { $$ = $1; }
+    |CASTEO                         { $$ = $1; }
+    |ENTERO                         { $$ = instrucciones.nuevoValor(tipoValor.ENTERO, Number($1)); }
+    |DECIMAL                        { $$ = instrucciones.nuevoValor(tipoValor.DOUBLE, Number($1)); }
+    |CHAR                           { $$ = instrucciones.nuevoValor(tipoValor.CHAR, $1); }
+    |CADENA                         { $$ = instrucciones.nuevoValor(tipoValor.STRING, $1); }
+    |TRUE                           { $$ = instrucciones.nuevoValor(tipoValor.BOOL, true); }
+    |FALSE                          { $$ = instrucciones.nuevoValor(tipoValor.BOOL, false); }
+    |IDENTIFICADOR                  { $$ = instrucciones.nuevoValor(tipoValor.IDENTIFICADOR, $1); }
+    |INSTRETUR                      { $$ = $1; }
+    |IDENTIFICADOR CORIZQ EXP CORDER                    { $$ = instrucciones.nuevoValor(tipoValor.IDENTIFICADOR, $1); }
+    |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER      { $$ = instrucciones.nuevoValor(tipoValor.IDENTIFICADOR, $1); }
 ;
 
 EXPLOGICA
@@ -180,51 +192,55 @@ EXPLOGICA
     |EXPLOGICA OR EXPLOGICA
     |EXPLOGICA AND EXPLOGICA
     |NOT EXPLOGICA
+    |DEFTER
     |EXP
+;
+
+DEFTER
+    :EXP INTERR EXP DOSPUNTOS EXP
 ;
 
 INSTRUCCIONES
-     :INSTRUCCIONES ELEMINST
-     |ELEMINST
+     :INSTRUCCIONES ELEMINST        { $1.push($2); $$ = $1; }
+     |ELEMINST                      { $$ = [$1]; }
 ;
 
 ELEMINST
-     :DECLARACION
-     |ASIGNACION
-     |DEFTER PTCOMA
-     |DEFIF
-     |DEFSWITCH
-     |DEFWHILE
-     |DEFFOR
-     |DEFDOWHILE
-     |BREAK PTCOMA
-     |CONTINUE PTCOMA
-     |RETURN PTCOMA
-     |RETURN EXP PTCOMA
-     |IMPRIMIR
-     |LISTAGREGAR
-     |METODO
-     |FUNCION
-     |LLAMADA PTCOMA
-     |EXEC LLAMADA PTCOMA
+     :DECLARACION                   { $$ = $1; }
+     |ASIGNACION                    { $$ = $1; }
+     |DEFTER PTCOMA                 { $$ = $1; }
+     |DEFIF                         { $$ = $1; }
+     |DEFSWITCH                     { $$ = $1; }
+     |DEFWHILE                      { $$ = $1; }
+     |DEFFOR                        { $$ = $1; }
+     |DEFDOWHILE                    { $$ = $1; }
+     |BREAK PTCOMA                  { $$ = $1; }
+     |CONTINUE PTCOMA               { $$ = $1; }
+     |RETURN PTCOMA                 { $$ = $1; }
+     |RETURN EXP PTCOMA             { $$ = $1; }
+     |IMPRIMIR                      { $$ = $1; }
+     |LISTAGREGAR                   { $$ = $1; }
+     |METODO                        { $$ = $1; }
+     |FUNCION                       { $$ = $1; }
+     |LLAMADA PTCOMA                { $$ = $1; }
+     |EXEC LLAMADA PTCOMA           { $$ = $1; }
 ;
 
 CASTEO
-    :PARIZQ TIPO PARDER EXP
-    |EXP
+    :PARIZQ TIPO PARDER EXP %prec UCASTEO
 ;
 
 DECLARACION
-    :TIPO IDENTIFICADOR IGUAL CASTEO PTCOMA
-    |TIPO IDENTIFICADOR PTCOMA
+    :TIPO IDENTIFICADOR IGUAL EXP PTCOMA            { $$ = instrucciones.nuevaDeclaracion($1, undefined, $2, $4); }
+    |TIPO IDENTIFICADOR PTCOMA                      { $$ = instrucciones.nuevaDeclaracion($1, undefined, $2, undefined); }
     |VECTORES
     |LISTAS
 ;
 
 ASIGNACION
-    :IDENTIFICADOR IGUAL CASTEO PTCOMA
-    |IDENTIFICADOR CORIZQ EXP CORDER IGUAL CASTEO PTCOMA
-    |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER IGUAL CASTEO PTCOMA
+    :IDENTIFICADOR IGUAL EXP PTCOMA
+    |IDENTIFICADOR CORIZQ EXP CORDER IGUAL EXP PTCOMA
+    |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER IGUAL EXP PTCOMA
 ;
 
 VECTORES
@@ -233,13 +249,13 @@ VECTORES
 ;
 
 LISTAVALORES
-    :LISTAVALORES COMA CASTEO
-    |CASTEO
+    :LISTAVALORES COMA EXP
+    |EXP
 ;
 
 LISTAS
     :LIST MENOR TIPO MAYOR IDENTIFICADOR IGUAL NEW LIST MENOR TIPO MAYOR PTCOMA
-    |LIST MENOR CHAR MAYOR IDENTIFICADOR IGUAL INSTOCHARRAY PTCOMA
+    |LIST MENOR TIPO MAYOR IDENTIFICADOR IGUAL INSTOCHARRAY PTCOMA
 ;
 
 INSTOCHARRAY
@@ -250,24 +266,10 @@ LISTAGREGAR
     :IDENTIFICADOR PUNTO ADD PARIZQ EXP PARDER PTCOMA
 ;
 
-DEFTER
-    :EXPLOGICA INTERR INSTRTER DOSPUNTOS INSTRTER
-;
-
-INSTRTER
-     :DECLARACION
-     |ASIGNACION
-     |BREAK PTCOMA
-     |CONTINUE PTCOMA
-     |RETURN PTCOMA
-     |RETURN EXP PTCOMA
-     |EXP
-;
-
 DEFIF
-    :DEFIF ELSE IF PARIZQ EXPLOGICA PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    :DEFIF ELSE IF PARIZQ EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER
     |DEFIF ELSE LLAVIZQ INSTRUCCIONES LLAVDER
-    |IF PARIZQ EXPLOGICA PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    |IF PARIZQ EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER
 ;
 
 DEFSWITCH
@@ -282,7 +284,7 @@ CASES
 ;
 
 DEFWHILE
-    :WHILE PARIZQ EXPLOGICA PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    :WHILE PARIZQ EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER
 ;
 
 DEFFOR
@@ -290,22 +292,22 @@ DEFFOR
 ;
 
 INSTFOR
-    :DECLARACION EXPLOGICA PTCOMA EXP
-    |ASIGNACION EXPLOGICA PTCOMA EXP
+    :DECLARACION EXP PTCOMA EXP
+    |ASIGNACION EXP PTCOMA EXP
 ;
 
 DEFDOWHILE
-    :DO LLAVIZQ INSTRUCCIONES LLAVDER WHILE PARIZQ EXPLOGICA PARDER PTCOMA
+    :DO LLAVIZQ INSTRUCCIONES LLAVDER WHILE PARIZQ EXP PARDER PTCOMA
 ;
 
 METODO
-    :VOID IDENTIFICADOR PARIZQ LISTAPAR PARDER CORIZQ INSTRUCCIONES CORDER
-    |VOID IDENTIFICADOR PARIZQ PARDER CORIZQ INSTRUCCIONES CORDER
+    :VOID IDENTIFICADOR PARIZQ LISTAPAR PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    |VOID IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER
 ;
 
 FUNCION
-    :TIPO IDENTIFICADOR PARIZQ LISTAPAR PARDER CORIZQ INSTRUCCIONES CORDER
-    |TIPO IDENTIFICADOR PARIZQ PARDER CORIZQ INSTRUCCIONES CORDER
+    :TIPO IDENTIFICADOR PARIZQ LISTAPAR PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    |TIPO IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER
 ;
 
 LISTAPAR
@@ -335,7 +337,7 @@ INSTRETUR
 ;
 
 IMPRIMIR
-    :PRINT PARIZQ EXP PARDER PTCOMA
+    :PRINT PARIZQ EXP PARDER PTCOMA         { $$ = instrucciones.nuevoImprimir($3); }
 ;
 
 INSTLOWER
