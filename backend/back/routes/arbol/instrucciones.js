@@ -17,7 +17,6 @@ const TIPO_OPERACION = {
     NEGATIVO:       "OP_NEGATIVO",
     ADICION:        "OP_ADICION",
     SUSTRACCION:    "OP_SUSTRACCION",
-    MENOS:          "OP_MENOS",
     IGUALDAD:       "OP_IGUALDAD",
     DIFERENTE:      "OP_DIFERENTE",
     MENOR:          "OP_MENOR",
@@ -31,7 +30,16 @@ const TIPO_OPERACION = {
 
 const TIPO_INSTRUCCION = {
     IMPRIMIR:           'INSTR_IMPRIMIR',
-    DECLARACION:        'INSTR_DECLARACION'
+    DECLARACION:        'INSTR_DECLARACION',
+    WHILE:              'INSTR_WHILE',
+    IF:                 'INSTR_IF',
+    ASIGNACION:         'INSTR_ASIGNACION',
+    METODO:             'INSTR_METODO',
+    FUNCION:            'INSTR_FUNCION',
+    EXEC:               'INSTR_EXEC',
+    LLAMADA:            'INSTR_LLAMADA',
+    BREAK:              'INSTR_BREAK',
+    TERNARIO:           'INSTR_TERNARIO'
 }
 
 const INSTRUCCION = {
@@ -64,10 +72,32 @@ const INSTRUCCION = {
             expresion: expresion
         }
     },
+    nuevaAsignacion: function (id, expresion){
+        return{
+            tipo: TIPO_INSTRUCCION.ASIGNACION,
+            id: id,
+            expresion: expresion
+        }
+    },
     nuevoImprimir: function (expresion){
         return{
             tipo: TIPO_INSTRUCCION.IMPRIMIR,
             expresion: expresion
+        }
+    },
+    nuevoWhile: function (condicion, instrucciones){
+        return{
+            tipo: TIPO_INSTRUCCION.WHILE,
+            condidicion: condicion,
+            instrucciones: instrucciones
+        }
+    },
+    nuevoIf: function (condicion, instVerdadero, instFalso){
+        return{
+            tipo: TIPO_INSTRUCCION.IF,
+            condicion: condicion,
+            instVerdadero: instVerdadero,
+            instFalso: instFalso
         }
     }
 }

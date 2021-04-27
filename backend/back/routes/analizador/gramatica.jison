@@ -164,7 +164,7 @@ EXP
     |EXP POTENCIA EXP               { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.POTENCIA, $1, $3); }
     |EXP MODULO EXP                 { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MODULO, $1, $3); }
     |PARIZQ EXP PARDER              { $$ = $2; }
-    |MENOS EXP %prec UMENOS         { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.MENOS, $2); }
+    |MENOS EXP %prec UMENOS         { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.NEGATIVO, $2); }
     |NOT EXP                        { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.NOT, $2); }
     |EXP SUMA2                      { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.ADICION, $1); }
     |EXP RESTA2                     { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.SUSTRACCION, $1); }
@@ -238,7 +238,7 @@ DECLARACION
 ;
 
 ASIGNACION
-    :IDENTIFICADOR IGUAL EXP PTCOMA
+    :IDENTIFICADOR IGUAL EXP PTCOMA                 { $$ = instrucciones.nuevaAsignacion($1, $3); }
     |IDENTIFICADOR CORIZQ EXP CORDER IGUAL EXP PTCOMA
     |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER IGUAL EXP PTCOMA
 ;

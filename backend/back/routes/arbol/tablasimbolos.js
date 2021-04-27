@@ -40,6 +40,20 @@ class TablaS {
         return this._simbolos.filter((simbolo) => simbolo.id === id)[0];
     }
 
+    modificar(id, valor){
+        let valorr = this._simbolos.filter((simbolo) => simbolo.id === id)[0];
+        if (valorr === undefined){
+            console.log('error no existe la variable')
+        }else{
+            if(valorr.tipo === valor.tipo){
+                this._simbolos.filter((simbolo) => simbolo.id === id)[0].valor = valor.valor;
+            }
+            else{
+                console.log("Los tipos no coinciden");
+            }
+        }
+    }
+
     get simbolos(){
         return this._simbolos;
     }

@@ -147,7 +147,7 @@ case 21: case 54: case 60: case 61: case 62: case 68:
  this.$ = $$[$0-1]; 
 break;
 case 22:
- this.$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.MENOS, $$[$0]); 
+ this.$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.NEGATIVO, $$[$0]); 
 break;
 case 23:
  this.$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.NOT, $$[$0]); 
@@ -202,6 +202,9 @@ case 71:
 break;
 case 72:
  this.$ = instrucciones.nuevaDeclaracion($$[$0-2], undefined, $$[$0-1], undefined); 
+break;
+case 75:
+ this.$ = instrucciones.nuevaAsignacion($$[$0-3], $$[$0-1]); 
 break;
 case 117:
  this.$ = instrucciones.nuevoImprimir($$[$0-2]); 

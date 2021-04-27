@@ -16,7 +16,6 @@ router.post('/texto', function(req, res, next) {
         console.log(valor);
         let arbol = parser.parse(valor);
         let salida = interprete.ejecutar(arbol);
-        console.log(salida);
         res.send(salida);
     }
     catch (e){
