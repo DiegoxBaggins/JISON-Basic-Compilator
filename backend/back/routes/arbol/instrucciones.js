@@ -32,14 +32,21 @@ const TIPO_INSTRUCCION = {
     IMPRIMIR:           'INSTR_IMPRIMIR',
     DECLARACION:        'INSTR_DECLARACION',
     WHILE:              'INSTR_WHILE',
+    BLOQUEIF:           'INSTR_BLOQUEIF',
     IF:                 'INSTR_IF',
+    ELSE:               'INSTR_ELSE',
     ASIGNACION:         'INSTR_ASIGNACION',
     METODO:             'INSTR_METODO',
     FUNCION:            'INSTR_FUNCION',
     EXEC:               'INSTR_EXEC',
     LLAMADA:            'INSTR_LLAMADA',
     BREAK:              'INSTR_BREAK',
-    TERNARIO:           'INSTR_TERNARIO'
+    TERNARIO:           'INSTR_TERNARIO',
+    DOWHILE:            'INSTR_DOWHILE',
+    FOR:                'INSTR_FOR',
+    SWTICH:             'INSTR_SWITCH',
+    CASE:               'INSTR_CASE',
+    DEFAULT:            'INSTR'
 }
 
 const INSTRUCCION = {
@@ -88,16 +95,63 @@ const INSTRUCCION = {
     nuevoWhile: function (condicion, instrucciones){
         return{
             tipo: TIPO_INSTRUCCION.WHILE,
-            condidicion: condicion,
+            condicion: condicion,
             instrucciones: instrucciones
         }
     },
-    nuevoIf: function (condicion, instVerdadero, instFalso){
+    nuevoBloqueIf: function (instrucciones){
+        return{
+            tipo: TIPO_INSTRUCCION.BLOQUEIF,
+            instrucciones: instrucciones
+        }
+    },
+    nuevoIf: function (condicion, instrucciones){
         return{
             tipo: TIPO_INSTRUCCION.IF,
             condicion: condicion,
-            instVerdadero: instVerdadero,
-            instFalso: instFalso
+            instrucciones: instrucciones
+        }
+    },
+    nuevoElse: function (instrucciones){
+        return{
+            tipo: TIPO_INSTRUCCION.ELSE,
+            instrucciones:instrucciones
+        }
+    },
+    nuevoDoWhile: function (condicion, instrucciones){
+        return{
+            tipo: TIPO_INSTRUCCION.DOWHILE,
+            condicion: condicion,
+            instrucciones: instrucciones
+        }
+    },
+    nuevoFor: function (asignacion1, condicion, asignacion2, instrucciones){
+        return{
+            tipo: TIPO_INSTRUCCION.FOR,
+            asignacion1: asignacion1,
+            condicion: condicion,
+            asignacion2: asignacion2,
+            instrucciones: instrucciones
+        }
+    },
+    nuevoSwitch: function (condicion, instrucciones){
+        return{
+            tipo: TIPO_INSTRUCCION.SWTICH,
+            condicion: condicion,
+            instrucciones: instrucciones
+        }
+    },
+    nuevoCase: function (condicion, instrucciones){
+        return{
+            tipo: TIPO_INSTRUCCION.CASE,
+            condicion: condicion,
+            instrucciones: instrucciones
+        }
+    },
+    nuevoDefault: function (instrucciones){
+        return{
+            tipo: TIPO_INSTRUCCION.DEFAULT,
+            instrucciones:instrucciones
         }
     }
 }

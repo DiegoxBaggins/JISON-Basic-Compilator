@@ -209,7 +209,7 @@ ELEMINST
      :DECLARACION                   { $$ = $1; }
      |ASIGNACION                    { $$ = $1; }
      |DEFTER PTCOMA                 { $$ = $1; }
-     |DEFIF                         { $$ = $1; }
+     |DEFIF                         { $$ = instrucciones.nuevoBloqueIf($1); }
      |DEFSWITCH                     { $$ = $1; }
      |DEFWHILE                      { $$ = $1; }
      |DEFFOR                        { $$ = $1; }
@@ -267,37 +267,38 @@ LISTAGREGAR
 ;
 
 DEFIF
-    :DEFIF ELSE IF PARIZQ EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER
-    |DEFIF ELSE LLAVIZQ INSTRUCCIONES LLAVDER
-    |IF PARIZQ EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    :DEFIF ELSE IF PARIZQ EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER      { $1.push(instrucciones.nuevoIf($5, $8)); $$ = $1; }
+    |DEFIF ELSE LLAVIZQ INSTRUCCIONES LLAVDER                           { $1.push(instrucciones.nuevoElse($4)); $$ = $1; }
+    |IF PARIZQ EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER                 { $$ = [instrucciones.nuevoIf($3, $6)]; }
 ;
 
 DEFSWITCH
-    :SWITCH PARIZQ EXP PARDER LLAVIZQ CASES LLAVDER
+    :SWITCH PARIZQ EXP PARDER LLAVIZQ CASES LLAVDER                     { $$ = instrucciones.nuevoSwitch($3, $6); }
 ;
 
 CASES
-    :CASES DEFAULT DOSPUNTOS INSTRUCCIONES
-    |CASES CASE EXP DOSPUNTOS INSTRUCCIONES
-    |DEFAULT DOSPUNTOS INSTRUCCIONES
-    |CASE EXP DOSPUNTOS INSTRUCCIONES
+    :CASES DEFAULT DOSPUNTOS INSTRUCCIONES          { $1.push(instrucciones.nuevoDefault($4)); $$ = $1; }
+    |CASES CASE EXP DOSPUNTOS INSTRUCCIONES         { $1.push(instrucciones.nuevoCase($3, $5)); $$ = $1; }
+    |DEFAULT DOSPUNTOS INSTRUCCIONES                { $$ = [instrucciones.nuevoDefault($3)]; }
+    |CASE EXP DOSPUNTOS INSTRUCCIONES               { $$ = [instrucciones.nuevoCase($2, $4)]; }
 ;
 
 DEFWHILE
-    :WHILE PARIZQ EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    :WHILE PARIZQ EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER      { $$ = instrucciones.nuevoWhile($3, $6); }
 ;
 
 DEFFOR
-    :FOR PARIZQ INSTFOR PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    :FOR PARIZQ DECLARACION EXP PTCOMA IDENTIFICADOR IGUAL EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER     { $$ = instrucciones.nuevoFor($3, $4, instrucciones.nuevaAsignacion($6, $8), $11); }
+    |FOR PARIZQ ASIGNACION EXP PTCOMA IDENTIFICADOR IGUAL EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER      { $$ = instrucciones.nuevoFor($3, $4, instrucciones.nuevaAsignacion($6, $8), $11); }
 ;
 
 INSTFOR
-    :DECLARACION EXP PTCOMA EXP
-    |ASIGNACION EXP PTCOMA EXP
+    :DECLARACION EXP PTCOMA ASIGNACION
+    |ASIGNACION EXP PTCOMA ASIGNACION
 ;
 
 DEFDOWHILE
-    :DO LLAVIZQ INSTRUCCIONES LLAVDER WHILE PARIZQ EXP PARDER PTCOMA
+    :DO LLAVIZQ INSTRUCCIONES LLAVDER WHILE PARIZQ EXP PARDER PTCOMA        { $$ = instrucciones.nuevoDoWhile($7, $3); }
 ;
 
 METODO

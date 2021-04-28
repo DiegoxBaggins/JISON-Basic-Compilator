@@ -45,8 +45,11 @@ class TablaS {
         if (valorr === undefined){
             console.log('error no existe la variable')
         }else{
-            if(valorr.tipo === valor.tipo){
-                this._simbolos.filter((simbolo) => simbolo.id === id)[0].valor = valor.valor;
+            console.log(valorr);
+            console.log(valor);
+            let valorNuevo = comprobarCasteos(valorr, valor);
+            if(valorNuevo !== undefined){
+                this._simbolos.filter((simbolo) => simbolo.id === id)[0].valor = valorNuevo;
             }
             else{
                 console.log("Los tipos no coinciden");
@@ -58,6 +61,81 @@ class TablaS {
         return this._simbolos;
     }
 
+}
+
+function comprobarCasteos(exp1, exp2){
+    switch(exp1.tipo){
+        case TIPO_DATO.ENTERO:
+            switch(exp2.tipo){
+                case TIPO_DATO.ENTERO:
+                    return exp2.valor;
+                case TIPO_DATO.BOOL:
+                    if(exp2.valor){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case TIPO_DATO.CHAR:
+                    return exp2.valor.charCodeAt(0);
+                default:
+                    console.log("ERROR de tipos");
+                    return undefined;
+            }
+        case TIPO_DATO.DOUBLE:
+            switch(exp2.tipo){
+                case TIPO_DATO.ENTERO:
+                    return exp2.valor;
+                case TIPO_DATO.DOUBLE:
+                    return exp2.valor;
+                case TIPO_DATO.CHAR:
+                    return exp2.valor.charCodeAt(0);
+                case TIPO_DATO.BOOL:
+                    if(exp2.valor){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                default:
+                    console.log("ERROR de tipos");
+                    return undefined;
+            }
+        case TIPO_DATO.CHAR:
+            switch(exp2.tipo){
+                case TIPO_DATO.CHAR:
+                    return exp2.valor;
+                default:
+                    console.log("ERROR de tipos");
+                    return undefined;
+            }
+        case TIPO_DATO.BOOL:
+            switch(exp2.tipo) {
+                case TIPO_DATO.BOOL:
+                    return exp2.valor;
+                case TIPO_DATO.ENTERO || TIPO_DATO.DOUBLE:
+                    if (exp2.valor === 1){
+                        return true;
+                    }else if(exp2.valor === 0){
+                        return false;
+                    }else{
+                        console.log("ERROR de tipos");
+                        return undefined;
+                    }
+                default:
+                    console.log("ERROR de tipos");
+                    return undefined;
+            }
+        case TIPO_DATO.STRING:
+            switch(exp2.tipo){
+                case TIPO_DATO.STRING || TIPO_DATO.CHAR:
+                    return exp2.valor;
+                default:
+                    console.log("ERROR de tipos");
+                    return undefined;
+            }
+        default:
+            console.log("ERROR de tipos");
+            return undefined;
+    }
 }
 
 module.exports.TIPO_DATO = TIPO_DATO;
