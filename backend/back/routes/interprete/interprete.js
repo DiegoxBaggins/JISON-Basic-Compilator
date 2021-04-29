@@ -8,12 +8,47 @@ const procesarexpresion = require('../interprete/expresion').procesarexpresion;
 let salida = ''
 function ejecutar(arbol){
     salida = '';
+    let metodos = [];
+    let tslocal = new TablaS([]);
     let tablaGlobal = new TablaS([]);
-    ejecutarbloqueglobal(arbol, tablaGlobal, undefined);
+    let main = [];
+    ejecutarbloqueglobal(arbol, tablaGlobal, tslocal, metodos, main);
+    if(main.length===1){
+        let llamada = main[0].metodo;
+        let metodoExec = metodos.filter((metodo) => metodo.id === llamada.id)[0];
+        if(metodoExec){
+            let tslocal2 = new TablaS(tslocal.simbolos);
+            tslocal2.agregarParametros(metodoExec.parametros, llamada.expresiones);
+            ejecutarbloquelocal(metodoExec.instrucciones, tablaGlobal, tslocal2);
+        }else{
+            console.log("no hay main");
+        }
+    }else{
+        console.log("mas de un main");
+    }
     return salida;
 }
 
-function ejecutarbloqueglobal(instrucciones, tsglobal, tslocal){
+function ejecutarbloqueglobal(instrucciones, tsglobal, tslocal, metodos, main){
+    instrucciones.forEach((instruccion)=>{
+        console.log(instruccion);
+        if(instruccion.tipo === tipoInstruccion.DECLARACION){
+            ejecutardeclaracionglobal(instruccion, tsglobal,tslocal);
+        }
+        else if(instruccion.tipo === tipoInstruccion.ASIGNACION){
+            ejecutarAsignacionglobal(instruccion, tsglobal,tslocal);
+        }
+        else if(instruccion.tipo === tipoInstruccion.METODO){
+            metodos.push(instruccion);
+        }
+        else if(instruccion.tipo === tipoInstruccion.EXC){
+            main.push(instruccion);
+        }
+    });
+
+}
+
+function ejecutarbloquelocal(instrucciones, tsglobal, tslocal){
     instrucciones.forEach((instruccion)=>{
         console.log(instruccion);
         if(instruccion.tipo === tipoInstruccion.DECLARACION){
@@ -43,7 +78,7 @@ function ejecutarbloqueglobal(instrucciones, tsglobal, tslocal){
     });
 }
 
-function ejecutardeclaracion(instruccion, tsglobal, tslocal){
+function ejecutardeclaracionglobal(instruccion, tsglobal, tslocal){
     console.log(instruccion.expresion);
     if (instruccion.expresion === undefined){
         console.log("soy undefined");
@@ -67,6 +102,40 @@ function ejecutardeclaracion(instruccion, tsglobal, tslocal){
     }else{
         let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
         tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor);
+        console.log(tsglobal);
+    }
+}
+
+function ejecutarAsignacionglobal(instruccion, tsglobal, tslocal){
+    console.log(instruccion.expresion);
+    let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
+    tsglobal.modificar(instruccion.id, valor);
+}
+
+function ejecutardeclaracion(instruccion, tsglobal, tslocal){
+    console.log(instruccion.expresion);
+    if (instruccion.expresion === undefined){
+        console.log("soy undefined");
+        switch(instruccion.tipo_dato1){
+            case tipoDato.ENTERO:
+                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0});
+                break;
+            case tipoDato.DOUBLE:
+                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0.0});
+                break;
+            case tipoDato.BOOL:
+                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:true});
+                break;
+            case tipoDato.CHAR:
+                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""});
+                break;
+            case tipoDato.STRING:
+                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""});
+                break;
+        }
+    }else{
+        let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
+        tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor);
         console.log(tsglobal);
     }
 }
@@ -100,7 +169,7 @@ function ejecutarwhile(instruccion, tsglobal, tslocal){
     console.log(instruccion.condicion);
     let valor = procesarexpresion(instruccion.condicion, tsglobal ,tslocal);
     while (valor.valor){
-        ejecutarbloqueglobal(instruccion.instrucciones, tsglobal, tslocal);
+        ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
         valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
     }
 }
@@ -113,7 +182,7 @@ function ejecutarif(instruccion1, tsglobal, tslocal){
             console.log("soy un if o if else");
             let valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
             if (valor.valor) {
-                ejecutarbloqueglobal(instruccion.instrucciones, tsglobal, tslocal);
+                ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
                 return false;
             }else{
                 return true;
@@ -131,7 +200,7 @@ function ejecutarDowhile(instruccion, tsglobal, tslocal){
     console.log(instruccion.condicion);
     let valor = procesarexpresion(instruccion.condicion, tsglobal ,tslocal);
     do{
-        ejecutarbloqueglobal(instruccion.instrucciones, tsglobal, tslocal);
+        ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
         valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
     }while (valor.valor);
 }
@@ -139,10 +208,10 @@ function ejecutarDowhile(instruccion, tsglobal, tslocal){
 function ejecutarfor(instruccion, tsglobal, tslocal){
     console.log("soy for");
     let asig = [instruccion.asignacion1];
-    ejecutarbloqueglobal(asig, tsglobal, tslocal);
+    ejecutarbloquelocal(asig, tsglobal, tslocal);
     let valor = procesarexpresion(instruccion.condicion, tsglobal ,tslocal);
     while (valor.valor){
-        ejecutarbloqueglobal(instruccion.instrucciones, tsglobal, tslocal);
+        ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
         ejecutarAsignacion(instruccion.asignacion2, tsglobal, tslocal);
         valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
     }
@@ -163,14 +232,14 @@ function ejecutarSwitch(instruccion1, tsglobal, tslocal){
             console.log(expresion);
             let valor = procesarexpresion(expresion, tsglobal, tslocal);
             if (valor.valor) {
-                ejecutarbloqueglobal(instruccion.instrucciones, tsglobal, tslocal);
+                ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
                 return false;
             }else{
                 return true;
             }
         }else if (instruccion.tipo === tipoInstruccion.DEFAULT){
             console.log("soy un default");
-            ejecutarbloqueglobal(instruccion.instrucciones, tsglobal, tslocal);
+            ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
             return false;
         }
     });

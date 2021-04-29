@@ -137,7 +137,7 @@
 %% /* Definición de la gramática */
 
 INICIO
-	: INSTRUCCIONES EOF  {console.log('Lectura Correcta'); return $1;}
+	: INSTRUCCIONGLOBAL EOF  {console.log('Lectura Correcta'); return $1;}
 ;
 
 TIPO
@@ -182,22 +182,22 @@ EXP
     |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER      { $$ = instrucciones.nuevoValor(tipoValor.IDENTIFICADOR, $1); }
 ;
 
-EXPLOGICA
-    :EXPLOGICA IGUALDAD EXPLOGICA
-    |EXPLOGICA DIFERENTE EXPLOGICA
-    |EXPLOGICA MENOR EXPLOGICA
-    |EXPLOGICA MENORIGUAL EXPLOGICA
-    |EXPLOGICA MAYOR EXPLOGICA
-    |EXPLOGICA MAYORIGUAL EXPLOGICA
-    |EXPLOGICA OR EXPLOGICA
-    |EXPLOGICA AND EXPLOGICA
-    |NOT EXPLOGICA
-    |DEFTER
-    |EXP
-;
-
 DEFTER
     :EXP INTERR EXP DOSPUNTOS EXP
+;
+
+INSTRUCCIONGLOBAL
+     :INSTRUCCIONGLOBAL ELEMGLOBAL        { $1.push($2); $$ = $1; }
+     |ELEMGLOBAL                      { $$ = [$1]; }
+;
+
+ELEMGLOBAL
+     :DECLARACION                   { $$ = $1; }
+     |ASIGNACION                    { $$ = $1; }
+     |LISTAGREGAR                   { $$ = $1; }
+     |METODO                        { $$ = $1; }
+     |FUNCION                       { $$ = $1; }
+     |EXEC LLAMADA PTCOMA           { $$ = instrucciones.nuevoExc($2); }
 ;
 
 INSTRUCCIONES
@@ -220,10 +220,7 @@ ELEMINST
      |RETURN EXP PTCOMA             { $$ = $1; }
      |IMPRIMIR                      { $$ = $1; }
      |LISTAGREGAR                   { $$ = $1; }
-     |METODO                        { $$ = $1; }
-     |FUNCION                       { $$ = $1; }
      |LLAMADA PTCOMA                { $$ = $1; }
-     |EXEC LLAMADA PTCOMA           { $$ = $1; }
 ;
 
 CASTEO
@@ -292,18 +289,13 @@ DEFFOR
     |FOR PARIZQ ASIGNACION EXP PTCOMA IDENTIFICADOR IGUAL EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER      { $$ = instrucciones.nuevoFor($3, $4, instrucciones.nuevaAsignacion($6, $8), $11); }
 ;
 
-INSTFOR
-    :DECLARACION EXP PTCOMA ASIGNACION
-    |ASIGNACION EXP PTCOMA ASIGNACION
-;
-
 DEFDOWHILE
     :DO LLAVIZQ INSTRUCCIONES LLAVDER WHILE PARIZQ EXP PARDER PTCOMA        { $$ = instrucciones.nuevoDoWhile($7, $3); }
 ;
 
 METODO
-    :VOID IDENTIFICADOR PARIZQ LISTAPAR PARDER LLAVIZQ INSTRUCCIONES LLAVDER
-    |VOID IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    :VOID IDENTIFICADOR PARIZQ LISTAPAR PARDER LLAVIZQ INSTRUCCIONES LLAVDER { $$ = instrucciones.nuevoMetodo($2, $4, $7); }
+    |VOID IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER { $$ = instrucciones.nuevoMetodo($2, [], $6); }
 ;
 
 FUNCION
@@ -312,18 +304,18 @@ FUNCION
 ;
 
 LISTAPAR
-    :LISTAPAR COMA TIPO IDENTIFICADOR
-    |TIPO IDENTIFICADOR
+    :LISTAPAR COMA TIPO IDENTIFICADOR       { $1.push(instrucciones.nuevoParametro($3,$4)); $$ = $1; }
+    |TIPO IDENTIFICADOR                     { $$ = [instrucciones.nuevoParametro($1,$2)]; }
 ;
 
 LLAMADA
-    :IDENTIFICADOR PARIZQ LISTALLA PARDER
-    |IDENTIFICADOR PARIZQ PARDER
+    :IDENTIFICADOR PARIZQ LISTALLA PARDER   { $$ = instrucciones.nuevaLlamada($1, $3); }
+    |IDENTIFICADOR PARIZQ PARDER            { $$ = instrucciones.nuevaLlamada($1, []); }
 ;
 
 LISTALLA
-    :LISTALLA COMA EXP
-    |EXP
+    :LISTALLA COMA EXP                      { $1.push(instrucciones.nuevoParLlamada($3)); $$ = $1; }
+    |EXP                                    { $$ = [instrucciones.nuevoParLlamada($1)]; }
 ;
 
 INSTRETUR

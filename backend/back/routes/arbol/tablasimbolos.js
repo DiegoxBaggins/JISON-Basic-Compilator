@@ -27,7 +27,9 @@ class TablaS {
         if(simbolo !== undefined){
             console.log("simbolo ya existe")
         }else{
-            if(tipo === valor.tipo){
+            let valorr = {tipo: tipo, valor: valor.valor }
+            let valorNuevo = comprobarCasteos(valorr, valor);
+            if(valorNuevo !== undefined){
                 this._simbolos.push(crearSimbolo(tipo, tipo2, id, valor.valor))
                 console.log("simbolo registrado con exito");
             }else{
@@ -57,6 +59,15 @@ class TablaS {
         }
     }
 
+    agregarParametros(parametros, expresiones){
+        let indice= 0;
+        parametros.forEach((parametro)=>{
+            let expresion = expresiones[indice];
+            this.agregar(parametro.tipo, undefined, parametro.id, expresion.exp);
+            indice = indice + 1;
+        });
+    }
+
     get simbolos(){
         return this._simbolos;
     }
@@ -84,7 +95,7 @@ function comprobarCasteos(exp1, exp2){
         case TIPO_DATO.DOUBLE:
             switch(exp2.tipo){
                 case TIPO_DATO.ENTERO:
-                    return exp2.valor;
+                    return exp2.valor + 0.0;
                 case TIPO_DATO.DOUBLE:
                     return exp2.valor;
                 case TIPO_DATO.CHAR:

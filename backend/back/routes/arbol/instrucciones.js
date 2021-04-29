@@ -5,6 +5,7 @@ const TIPO_VALOR = {
     CHAR:           'VAL_CHAR',
     STRING:         'VAL_STRING',
     IDENTIFICADOR:  'VAL_IDENTIFICADOR',
+    VOID:           'VAL_VOID',
 }
 
 const TIPO_OPERACION = {
@@ -36,17 +37,18 @@ const TIPO_INSTRUCCION = {
     IF:                 'INSTR_IF',
     ELSE:               'INSTR_ELSE',
     ASIGNACION:         'INSTR_ASIGNACION',
+    DOWHILE:            'INSTR_DOWHILE',
+    FOR:                'INSTR_FOR',
+    SWTICH:             'INSTR_SWITCH',
+    CASE:               'INSTR_CASE',
+    DEFAULT:            'INSTR_DEFAULT',
     METODO:             'INSTR_METODO',
     FUNCION:            'INSTR_FUNCION',
     EXEC:               'INSTR_EXEC',
     LLAMADA:            'INSTR_LLAMADA',
     BREAK:              'INSTR_BREAK',
     TERNARIO:           'INSTR_TERNARIO',
-    DOWHILE:            'INSTR_DOWHILE',
-    FOR:                'INSTR_FOR',
-    SWTICH:             'INSTR_SWITCH',
-    CASE:               'INSTR_CASE',
-    DEFAULT:            'INSTR'
+    EXC:                'INSTR_EXC'
 }
 
 const INSTRUCCION = {
@@ -152,6 +154,38 @@ const INSTRUCCION = {
         return{
             tipo: TIPO_INSTRUCCION.DEFAULT,
             instrucciones:instrucciones
+        }
+    },
+    nuevoMetodo: function (identificador, parametros, instrucciones){
+        return{
+            tipo: TIPO_INSTRUCCION.METODO,
+            id: identificador,
+            parametros: parametros,
+            instrucciones: instrucciones
+        }
+    },
+    nuevoParametro: function (tipo, id){
+        return {
+            tipo: tipo,
+            id: id
+        }
+    },
+    nuevoParLlamada: function (exp){
+        return {
+            exp: exp
+        }
+    },
+    nuevaLlamada: function (id, expresiones){
+        return {
+            tipo: TIPO_INSTRUCCION.LLAMADA,
+            id: id,
+            expresiones: expresiones
+        }
+    },
+    nuevoExc: function (llamada){
+        return {
+            tipo: TIPO_INSTRUCCION.EXC,
+            metodo: llamada
         }
     }
 }
