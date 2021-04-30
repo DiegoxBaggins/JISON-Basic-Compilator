@@ -160,7 +160,7 @@ EXP
     |EXP MAS EXP                    { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.SUMA, $1, $3); }
     |EXP MENOS EXP                  { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.RESTA, $1, $3); }
     |EXP POR EXP                    { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MULTIPLICACION, $1, $3); }
-    |EXP DIVIDIDO EXP               { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.DIVISON, $1, $3); }
+    |EXP DIVIDIDO EXP               { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.DIVISION, $1, $3); }
     |EXP POTENCIA EXP               { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.POTENCIA, $1, $3); }
     |EXP MODULO EXP                 { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MODULO, $1, $3); }
     |PARIZQ EXP PARDER              { $$ = $2; }
@@ -235,7 +235,7 @@ DECLARACION
 ;
 
 ASIGNACION
-    :IDENTIFICADOR IGUAL EXP PTCOMA                 { $$ = instrucciones.nuevaAsignacion($1, $3); }
+    :IDENTIFICADOR IGUAL EXP PTCOMA                                     { $$ = instrucciones.nuevaAsignacion($1, $3); }
     |IDENTIFICADOR CORIZQ EXP CORDER IGUAL EXP PTCOMA
     |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER IGUAL EXP PTCOMA
 ;
@@ -314,8 +314,8 @@ LLAMADA
 ;
 
 LISTALLA
-    :LISTALLA COMA EXP                      { $1.push(instrucciones.nuevoParLlamada($3)); $$ = $1; }
-    |EXP                                    { $$ = [instrucciones.nuevoParLlamada($1)]; }
+    :LISTALLA COMA EXP                      { $1.push($3); $$ = $1; }
+    |EXP                                    { $$ = [$1]; }
 ;
 
 INSTRETUR

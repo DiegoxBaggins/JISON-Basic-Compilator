@@ -135,7 +135,7 @@ case 17:
  this.$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MULTIPLICACION, $$[$0-2], $$[$0]); 
 break;
 case 18:
- this.$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.DIVISON, $$[$0-2], $$[$0]); 
+ this.$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.DIVISION, $$[$0-2], $$[$0]); 
 break;
 case 19:
  this.$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.POTENCIA, $$[$0-2], $$[$0]); 
@@ -191,7 +191,7 @@ break;
 case 39: case 47:
  $$[$0-1].push($$[$0]); this.$ = $$[$0-1]; 
 break;
-case 40: case 48:
+case 40: case 48: case 101:
  this.$ = [$$[$0]]; 
 break;
 case 46:
@@ -264,10 +264,7 @@ case 99:
  this.$ = instrucciones.nuevaLlamada($$[$0-2], []); 
 break;
 case 100:
- $$[$0-2].push(instrucciones.nuevoParLlamada($$[$0])); this.$ = $$[$0-2]; 
-break;
-case 101:
- this.$ = [instrucciones.nuevoParLlamada($$[$0])]; 
+ $$[$0-2].push($$[$0]); this.$ = $$[$0-2]; 
 break;
 case 110:
  this.$ = instrucciones.nuevoImprimir($$[$0-2]); 

@@ -1,3 +1,4 @@
+
 const TIPO_VALOR = {
     ENTERO:         'VAL_ENTERO',
     DOUBLE:         'VAL_DOUBLE',
@@ -168,11 +169,6 @@ const INSTRUCCION = {
         return {
             tipo: tipo,
             id: id
-        }
-    },
-    nuevoParLlamada: function (exp){
-        return {
-            exp: exp
         }
     },
     nuevaLlamada: function (id, expresiones){

@@ -47,8 +47,8 @@ class TablaS {
         if (valorr === undefined){
             console.log('error no existe la variable')
         }else{
-            console.log(valorr);
-            console.log(valor);
+            //console.log(valorr);
+            //console.log(valor);
             let valorNuevo = comprobarCasteos(valorr, valor);
             if(valorNuevo !== undefined){
                 this._simbolos.filter((simbolo) => simbolo.id === id)[0].valor = valorNuevo;
@@ -63,7 +63,12 @@ class TablaS {
         let indice= 0;
         parametros.forEach((parametro)=>{
             let expresion = expresiones[indice];
-            this.agregar(parametro.tipo, undefined, parametro.id, expresion.exp);
+            let valorr = this.obtener(parametro.id);
+            if(valorr){
+                this.modificar(parametro.id, expresion);
+            }else{
+                this.agregar(parametro.tipo, undefined, parametro.id, expresion);
+            }
             indice = indice + 1;
         });
     }
