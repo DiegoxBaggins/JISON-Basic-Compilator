@@ -19,14 +19,21 @@ function ejecutar(arbol){
         let llamada = main[0].metodo;
         let metodoExec = metodos.filter((metodo) => metodo.id === llamada.id)[0];
         if(metodoExec){
-            let tslocal2 = new TablaS(tslocal.simbolos);
-            let indice = 0;
-            llamada.expresiones.forEach((expresion) => {
-                llamada.expresiones[indice] = procesarexpresion(expresion, tablaGlobal, tslocal);
-                indice += 1;
-            });
-            tslocal2.agregarParametros(metodoExec.parametros, llamada.expresiones);
-            ejecutarbloquelocal(metodoExec.instrucciones, tablaGlobal, tslocal2);
+            if(metodoExec.parametros.length === llamada.expresiones.length){
+                let tslocal2 = new TablaS(tslocal.simbolos);
+                let indice = 0;
+                let nuevoExpresiones = [];
+                let nuevoParametro = [];
+                llamada.expresiones.forEach((expresion) => {
+                    nuevoExpresiones[indice] = procesarexpresion(expresion, tablaGlobal, tslocal);
+                    nuevoParametro[indice] = metodoExec.parametros[indice];
+                    indice += 1;
+                });
+                tslocal2.agregarParametros(nuevoParametro, nuevoExpresiones);
+                ejecutarbloquelocal(metodoExec.instrucciones, tablaGlobal, tslocal2);
+            }else{
+                console.log("No vienen correcto el numero de parametros");
+            }
         }else{
             console.log("no hay main");
         }
@@ -69,49 +76,55 @@ function ejecutarbloquelocal(instrucciones, tsglobal, tslocal){
             ejecutarAsignacion(instruccion, tsglobal,tslocal);
         }
         else if(instruccion.tipo === tipoInstruccion.WHILE){
-            let tslocal2 = new TablaS(tslocal.simbolos);
+            let tslocal2 = new TablaS(tslocal._simbolos);
             ejecutarwhile(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.BLOQUEIF){
-            let tslocal2 = new TablaS(tslocal.simbolos);
+            let tslocal2 = new TablaS(tslocal._simbolos);
             ejecutarif(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.DOWHILE){
-            let tslocal2 = new TablaS(tslocal.simbolos);
+            let tslocal2 = new TablaS(tslocal._simbolos);
             ejecutarDowhile(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.FOR){
-            let tslocal2 = new TablaS(tslocal.simbolos);
+            let tslocal2 = new TablaS(tslocal._simbolos);
             ejecutarfor(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.SWTICH){
-            let tslocal2 = new TablaS(tslocal.simbolos);
+            let tslocal2 = new TablaS(tslocal._simbolos);
             ejecutarSwitch(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.LLAMADA){
-            console.log("esto es una llamada");
-            let metodo = metodos.filter((metodo) => metodo.id === instruccion.id)[0];
-            console.log("busque el metodo");
-            if(metodo){
-                if(metodo.parametros.length === instruccion.expresiones){
-                    let indice = 0;
-                    instruccion.expresiones.every((expresion) => {
-                        instruccion.expresiones[indice] = procesarexpresion(expresion, tsglobal, tslocal);
-                        indice += 1;
-                    });
-                    let tslocal2 = new TablaS([]);
-                    tslocal2.agregarParametros(metodo.parametros, instruccion.expresiones);
-                    console.log(tslocal2);
-                    console.log("guarde los parametros");
-                    ejecutarbloquelocal(metodo.instrucciones, tsglobal, tslocal2);
-                }else{
-                    console.log("No vienen correcto el numero de parametros");
-                }
-            }else{
-                console.log("no existe este metodo");
-            }
+            ejecutarLlamado(instruccion, tsglobal, tslocal);
         }
     });
+}
+
+function ejecutarLlamado(instruccion, tsglobal, tslocal){
+    console.log("esto es una llamada");
+    let metodo = metodos.filter((metodo) => metodo.id === instruccion.id)[0];
+    if(metodo){
+        if(metodo.parametros.length === instruccion.expresiones.length){
+            let indice = 0;
+            console.log(metodo.parametros, instruccion.expresiones);
+            let nuevoExpresiones = [];
+            let nuevoParametro = [];
+            instruccion.expresiones.forEach((expresion) => {
+                nuevoExpresiones[indice] = procesarexpresion(expresion, tsglobal, tslocal);
+                nuevoParametro[indice] = metodo.parametros[indice];
+                indice += 1;
+            });
+            let tslocal2 = new TablaS([]);
+            tslocal2.agregarParametros(nuevoParametro, nuevoExpresiones);
+            //console.log(tslocal2);
+            ejecutarbloquelocal(metodo.instrucciones, tsglobal, tslocal2);
+        }else{
+            console.log("No vienen correcto el numero de parametros");
+        }
+    }else{
+        console.log("no existe este metodo");
+    }
 }
 
 function ejecutardeclaracionglobal(instruccion, tsglobal, tslocal){

@@ -19,7 +19,8 @@ function crearSimbolo(tipo, tipo2, id, valor){
 
 class TablaS {
     constructor(simbolos) {
-        this._simbolos = simbolos;
+        this._simbolos = [];
+        this._simbolos = this._simbolos.concat(simbolos);
     }
 
     agregar(tipo, tipo2, id, valor){
@@ -60,6 +61,7 @@ class TablaS {
     }
 
     agregarParametros(parametros, expresiones){
+        console.log(parametros, expresiones);
         let indice= 0;
         parametros.forEach((parametro)=>{
             let expresion = expresiones[indice];

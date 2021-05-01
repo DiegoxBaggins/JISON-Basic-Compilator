@@ -39,7 +39,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                 return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor + valorDer.valor };
             }
             else if(valorDer.tipo === tipoDato.DOUBLE){
-                return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor+valorDer.valor };
+                return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor + valorDer.valor };
             }
             else if(valorDer.tipo === tipoDato.BOOL){
                 if(valorDer.valor === true){
@@ -775,16 +775,16 @@ function procesarexpresion(expresion, tsglobal, tslocal){
 }
 
 function comparar(tipo, valora, valorb){
-    let valor1 = undefined;
-    let valor2 = undefined;
+    let valor1;
     if (valora.tipo === tipoDato.CHAR) {
         valor1 = valora.valor.charCodeAt(0);
-    }else{
+    } else {
         valor1 = valora.valor;
     }
+    let valor2;
     if (valorb.tipo === tipoDato.CHAR) {
         valor2 = valorb.valor.charCodeAt(0);
-    }else{
+    } else {
         valor2 = valorb.valor;
     }
     console.log(tipo, valor1, valor2);

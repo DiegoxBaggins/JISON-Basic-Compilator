@@ -17,6 +17,16 @@ class Base extends Component{
         this.handleChange1 = this.handleChange1.bind(this);
     }
 
+    TextFile = () => {
+        let texto = this.state.text2;
+        const element = document.createElement("a");
+        const file = new Blob([texto], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = "programa.txt";
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+    }
+
     onFileChange = event => {
         // Update the state
         this.setState({ selectedFile: event.target.files[0] });
@@ -64,7 +74,7 @@ class Base extends Component{
                     <h3> Compilador en linea </h3>
                     <input type="file" onChange={this.onFileChange} className="btn-upload" />
                     <button  className="btn-upload" onClick={this.onFileUpload}> Abrir </button>
-                    <input type="button" value="Guardar"  className="btn-upload"/>
+                    <input type="button" value="Guardar" onClick={this.TextFile} className="btn-upload"/>
                     <br/>
                 </div>
                 <input type="button" value="Nueva Pestana"  className="btn-upload"/>

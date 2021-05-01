@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const parser = require('./analizador/gramatica')
 const interprete = require('../routes/interprete/interprete');
+const graficarArbol = require('./graficar').graficarArbol;
 
 /* GET users listing. */
 
@@ -16,6 +17,7 @@ router.post('/texto', function(req, res, next) {
         console.log(valor);
         let arbol = parser.parse(valor);
         let salida = interprete.ejecutar(arbol);
+        graficarArbol(arbol);
         res.send(salida);
     }
     catch (e){
