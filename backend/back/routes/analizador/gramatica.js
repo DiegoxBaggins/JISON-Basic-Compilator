@@ -204,10 +204,10 @@ case 60:
  this.$ = $$[$0-2]; 
 break;
 case 65:
- this.$ = instrucciones.nuevaDeclaracion($$[$0-4], undefined, $$[$0-3], $$[$0-1]); 
+ this.$ = instrucciones.nuevaDeclaracion($$[$0-4], undefined, $$[$0-3], $$[$0-1], this._$.first_line, this._$.first_column); 
 break;
 case 66:
- this.$ = instrucciones.nuevaDeclaracion($$[$0-2], undefined, $$[$0-1], undefined); 
+ this.$ = instrucciones.nuevaDeclaracion($$[$0-2], undefined, $$[$0-1], undefined, this._$.first_line, this._$.first_column); 
 break;
 case 69:
  this.$ = instrucciones.nuevaAsignacion($$[$0-3], $$[$0-1]); 
@@ -258,10 +258,10 @@ case 97:
  this.$ = [instrucciones.nuevoParametro($$[$0-1],$$[$0])]; 
 break;
 case 98:
- this.$ = instrucciones.nuevaLlamada($$[$0-3], $$[$0-1]); 
+ this.$ = instrucciones.nuevaLlamada($$[$0-3], $$[$0-1], this._$.first_line, this._$.first_column); 
 break;
 case 99:
- this.$ = instrucciones.nuevaLlamada($$[$0-2], []); 
+ this.$ = instrucciones.nuevaLlamada($$[$0-2], [], this._$.first_line, this._$.first_column); 
 break;
 case 100:
  $$[$0-2].push($$[$0]); this.$ = $$[$0-2]; 

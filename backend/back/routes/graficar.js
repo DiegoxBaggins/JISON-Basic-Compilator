@@ -2,6 +2,7 @@ const tipoInstruccion = require('./arbol/instrucciones').TIPO_INSTRUCCION;
 const tipoOperacion = require('./arbol/instrucciones').TIPO_OPERACION;
 const tipoValor = require('./arbol/instrucciones').TIPO_VALOR;
 const tipoDato = require('./arbol/tablasimbolos').TIPO_DATO;
+const { exec } = require('child_process');
 
 var fs = require('fs');
 
@@ -17,6 +18,14 @@ function graficarArbol(arbol){
     fs.writeFile('./arbol.dot', str,  function (err) {
         if (err) throw err;
         console.log('Saved!');
+    });
+
+    exec('dot -Tpng arbol.dot -o arbol.png', (err, stdout, stderr) => {
+        if (err) {
+            console.error(`exec error: ${err}`);
+            return;
+        }
+        console.log(`Se logro compilar la imagen`);
     });
 }
 

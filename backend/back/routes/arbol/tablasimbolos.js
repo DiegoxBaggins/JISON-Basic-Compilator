@@ -8,12 +8,15 @@ const TIPO_DATO = {
     LISTA:          'VAL_LISTA'
 }
 
-function crearSimbolo(tipo, tipo2, id, valor){
+function crearSimbolo(tipo, tipo2, id, valor, linea, columna, ambito){
     return {
         tipo: tipo,
         tipo2: tipo2,
         id: id,
-        valor: valor
+        valor: valor,
+        linea: linea,
+        columna: columna,
+        ambito: ambito
     }
 }
 
@@ -23,7 +26,7 @@ class TablaS {
         this._simbolos = this._simbolos.concat(simbolos);
     }
 
-    agregar(tipo, tipo2, id, valor){
+    agregar(tipo, tipo2, id, valor, linea, columna, ambito){
         let simbolo = this.obtener(id);
         if(simbolo !== undefined){
             console.log("simbolo ya existe")
@@ -31,7 +34,7 @@ class TablaS {
             let valorr = {tipo: tipo, valor: valor.valor }
             let valorNuevo = comprobarCasteos(valorr, valor);
             if(valorNuevo !== undefined){
-                this._simbolos.push(crearSimbolo(tipo, tipo2, id, valor.valor))
+                this._simbolos.push(crearSimbolo(tipo, tipo2, id, valor.valor, linea, columna, ambito));
                 console.log("simbolo registrado con exito");
             }else{
                 console.log('error semantico');
@@ -60,7 +63,7 @@ class TablaS {
         }
     }
 
-    agregarParametros(parametros, expresiones){
+    agregarParametros(parametros, expresiones, linea, columna, ambito){
         console.log(parametros, expresiones);
         let indice= 0;
         parametros.forEach((parametro)=>{
@@ -69,7 +72,7 @@ class TablaS {
             if(valorr){
                 this.modificar(parametro.id, expresion);
             }else{
-                this.agregar(parametro.tipo, undefined, parametro.id, expresion);
+                this.agregar(parametro.tipo, undefined, parametro.id, expresion, linea, columna, ambito);
             }
             indice = indice + 1;
         });
@@ -79,6 +82,19 @@ class TablaS {
         return this._simbolos;
     }
 
+    agregarGeneral(valor){
+        let valorr = this._simbolos.filter((simbolo) => simbolo.id === valor.id)[0];
+        if (valorr === undefined){
+            this._simbolos.push(valor);
+        }else{
+            if( valor.linea === valorr.linea && valor.columna === valorr.columna){
+                console.log('error la variable ya existe');
+            }
+            else{
+                this._simbolos.push(valor);
+            }
+        }
+    }
 }
 
 function comprobarCasteos(exp1, exp2){

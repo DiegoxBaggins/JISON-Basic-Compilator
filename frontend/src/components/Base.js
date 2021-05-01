@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import Header from "./Header";
-
+import Variable from "./Variable";
 const Server = "http://localhost:3000";
 
 class Base extends Component{
@@ -11,7 +11,9 @@ class Base extends Component{
         this.state = {
             selectedFile: null,
             text1: 'Programa aqui',
-            text2: 'Resultado'
+            text2: 'Resultado',
+            variables: [],
+            imagenArbol: null
         };
 
         this.handleChange1 = this.handleChange1.bind(this);
@@ -47,6 +49,9 @@ class Base extends Component{
     };
 
     compilar = () => {
+        this.setState({
+            imagenArbol: null
+        });
         let texto = {
             text: this.state.text1
         }
@@ -57,12 +62,28 @@ class Base extends Component{
         });
     }
 
+    getTablaVariables = () => {
+        axios.get(`${Server}/compilador/tablaVariables`).then( (response) =>{
+            this.setState({
+                variables: response.data
+            })
+        });
+    }
+
     handleChange1 (event) {
         this.setState({text1: event.target.value});
     }
 
     handleChange2 (event) {
         this.setState({text2: event.target.value});
+    }
+
+    mostrarImagen = () => {
+        axios.get(`${Server}/compilador/imagenArbol`).then( (response) =>{
+            this.setState({
+                imagenArbol: response.data
+            })
+        });
     }
 
     render(){
@@ -86,15 +107,40 @@ class Base extends Component{
                 </div>
                 <div className="div-medio">
                     <input type="button" value="Compilar"  onClick={this.compilar} className="btn-upload"/>
-                    <input type="button" value="Reporte AST"  className="btn-upload"/>
-                    <input type="button" value="Gramaticas"  className="btn-upload"/>
+                    <input type="button" value="Reporte AST" onClick={this.mostrarImagen} className="btn-upload"/>
+                    <input type="button" value="Tabla de Variables" onClick={this.getTablaVariables} className="btn-upload"/>
                 </div>
                 <div className="div-txt">
                     <label htmlFor="txt2">Salida:</label>
                     <textarea id="txt2" value={this.state.text2} onChange={this.handleChange2} className="txtArea" readOnly/>
                 </div>
                 <div className="clearfix"> </div>
-                <h2>Tabla de errores</h2>
+                <div className="div-table">
+                    <table className="default">
+                        <caption>Tabla de Variables</caption>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Tipo especifico</th>
+                            <th>Id</th>
+                            <th>Linea</th>
+                            <th>Columna</th>
+                            <th>Ambito</th>
+                        </tr>
+                        {this.state.variables[0] &&
+                        this.state.variables.map((variable, i) => {
+                            return (
+                                <Variable key={i} variable={variable}/>
+                            )
+                        })
+                        }
+                    </table>
+                </div>
+                <div className="div-table">
+                    {this.state.imagenArbol &&
+                    <img src={`data:image/formato;base64,${this.state.imagenArbol}`}  alt="Imagen"/>
+                    }
+                </div>
+                <div className="clearfix"> </div>
             </div>
         )
     }

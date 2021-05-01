@@ -36,6 +36,12 @@ body {
   text-align: center;
 }
 
+.div-table{
+  width: 80%;
+  margin: 15px auto;
+  align-items: center;
+}
+
 .txtArea{
   border: 1px solid #ccc;
   padding: 1%;
@@ -54,6 +60,20 @@ body {
   width: 16%;
   min-height: 30px;
   height: 600px;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 10px;
+  text-align: center;
 }
 
 .clearfix{

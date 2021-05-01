@@ -73,13 +73,15 @@ const INSTRUCCION = {
             valor: valor
         }
     },
-    nuevaDeclaracion: function (tipo, tipo2, id, expresion){
+    nuevaDeclaracion: function (tipo, tipo2, id, expresion, linea, columna){
         return {
             tipo: TIPO_INSTRUCCION.DECLARACION,
             tipo_dato1: tipo,
             tipo_dato2: tipo2,
             id: id,
-            expresion: expresion
+            expresion: expresion,
+            linea: linea,
+            columna: columna
         }
     },
     nuevaAsignacion: function (id, expresion){
@@ -171,11 +173,13 @@ const INSTRUCCION = {
             id: id
         }
     },
-    nuevaLlamada: function (id, expresiones){
+    nuevaLlamada: function (id, expresiones, linea, columna){
         return {
             tipo: TIPO_INSTRUCCION.LLAMADA,
             id: id,
-            expresiones: expresiones
+            expresiones: expresiones,
+            linea: linea,
+            columna: columna
         }
     },
     nuevoExc: function (llamada){

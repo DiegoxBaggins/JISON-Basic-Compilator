@@ -228,8 +228,8 @@ CASTEO
 ;
 
 DECLARACION
-    :TIPO IDENTIFICADOR IGUAL EXP PTCOMA            { $$ = instrucciones.nuevaDeclaracion($1, undefined, $2, $4); }
-    |TIPO IDENTIFICADOR PTCOMA                      { $$ = instrucciones.nuevaDeclaracion($1, undefined, $2, undefined); }
+    :TIPO IDENTIFICADOR IGUAL EXP PTCOMA            { $$ = instrucciones.nuevaDeclaracion($1, undefined, $2, $4, this._$.first_line, this._$.first_column); }
+    |TIPO IDENTIFICADOR PTCOMA                      { $$ = instrucciones.nuevaDeclaracion($1, undefined, $2, undefined, this._$.first_line, this._$.first_column); }
     |VECTORES
     |LISTAS
 ;
@@ -309,8 +309,8 @@ LISTAPAR
 ;
 
 LLAMADA
-    :IDENTIFICADOR PARIZQ LISTALLA PARDER   { $$ = instrucciones.nuevaLlamada($1, $3); }
-    |IDENTIFICADOR PARIZQ PARDER            { $$ = instrucciones.nuevaLlamada($1, []); }
+    :IDENTIFICADOR PARIZQ LISTALLA PARDER   { $$ = instrucciones.nuevaLlamada($1, $3, this._$.first_line, this._$.first_column); }
+    |IDENTIFICADOR PARIZQ PARDER            { $$ = instrucciones.nuevaLlamada($1, [], this._$.first_line, this._$.first_column); }
 ;
 
 LISTALLA
