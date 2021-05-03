@@ -9,8 +9,10 @@ let salida = '';
 let metodos = [];
 let ambito = "global";
 let tablaGeneral = new TablaS([]);
-function ejecutar(arbol){
-    salida = '';
+let errores = [];
+function ejecutar(arbol, errors){
+    errores = errors;
+    salida = "";
     metodos = [];
     let tslocal = new TablaS([]);
     let tablaGlobal = new TablaS([]);
@@ -18,6 +20,7 @@ function ejecutar(arbol){
     ambito = "global";
     tablaGeneral = new TablaS([]);
     ejecutarbloqueglobal(arbol, tablaGlobal, tslocal, metodos, main);
+    tablaGeneral.agregarMetodos(metodos);
     //console.log(metodos);
     if(main.length===1){
         let llamada = main[0].metodo;
@@ -34,20 +37,24 @@ function ejecutar(arbol){
                     nuevoParametro[indice] = metodoExec.parametros[indice];
                     indice += 1;
                 });
-                tslocal2.agregarParametros(nuevoParametro, nuevoExpresiones, llamada.linea, llamada.columna, ambito);
+                errores.concat(tslocal2.agregarParametros(nuevoParametro, nuevoExpresiones, llamada.linea, llamada.columna, ambito));
                 guardarParametrosG(tslocal2, nuevoParametro);
                 ambito = "metodo " + llamada.id;
                 ejecutarbloquelocal(metodoExec.instrucciones, tablaGlobal, tslocal2);
-                console.log(tablaGeneral);
+                //console.log(tablaGeneral);
             }else{
                 console.log("No vienen correcto el numero de parametros");
+                errores.push("Error semantico: El numero de parametros en la llamada no corresponde en Exec");
             }
         }else{
             console.log("no hay main");
+            errores.push("Error semantico: No se encontro ningun metodo con el id: " + llamada.id);
         }
     }else{
         console.log("mas de un main");
+        errores.push("Error semantico: Se econtro 0 o mas de 2 metodos Exec");
     }
+    salida += construirError();
     return [salida, tablaGeneral._simbolos];
 }
 
@@ -115,24 +122,24 @@ function ejecutardeclaracionglobal(instruccion, tsglobal, tslocal){
         console.log("soy undefined");
         switch(instruccion.tipo_dato1){
             case tipoDato.ENTERO:
-                tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0}, instruccion.linea, instruccion.columna, ambito));
                 break;
             case tipoDato.DOUBLE:
-                tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0.0}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0.0}, instruccion.linea, instruccion.columna, ambito));
                 break;
             case tipoDato.BOOL:
-                tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:true}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:true}, instruccion.linea, instruccion.columna, ambito));
                 break;
             case tipoDato.CHAR:
-                tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""}, instruccion.linea, instruccion.columna, ambito));
                 break;
             case tipoDato.STRING:
-                tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""}, instruccion.linea, instruccion.columna, ambito));
                 break;
         }
     }else{
         let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
-        tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor, instruccion.linea, instruccion.columna, ambito);
+        errores.push(tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor, instruccion.linea, instruccion.columna, ambito));
         //console.log(tsglobal);
     }
     guardarVariables(tsglobal, instruccion.id);
@@ -141,7 +148,7 @@ function ejecutardeclaracionglobal(instruccion, tsglobal, tslocal){
 function ejecutarAsignacionglobal(instruccion, tsglobal, tslocal){
     //console.log(instruccion.expresion);
     let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
-    tsglobal.modificar(instruccion.id, valor);
+    errores.push(tsglobal.modificar(instruccion.id, valor));
 }
 
 function ejecutardeclaracion(instruccion, tsglobal, tslocal){
@@ -150,24 +157,24 @@ function ejecutardeclaracion(instruccion, tsglobal, tslocal){
         console.log("soy undefined");
         switch(instruccion.tipo_dato1){
             case tipoDato.ENTERO:
-                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0}, instruccion.linea, instruccion.columna, ambito));
                 break;
             case tipoDato.DOUBLE:
-                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0.0}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:0.0}, instruccion.linea, instruccion.columna, ambito));
                 break;
             case tipoDato.BOOL:
-                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:true}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:true}, instruccion.linea, instruccion.columna, ambito));
                 break;
             case tipoDato.CHAR:
-                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""}, instruccion.linea, instruccion.columna, ambito));
                 break;
             case tipoDato.STRING:
-                tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""}, instruccion.linea, instruccion.columna, ambito);
+                errores.push(tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , {tipo:instruccion.tipo_dato1, valor:""}, instruccion.linea, instruccion.columna, ambito));
                 break;
         }
     }else{
         let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
-        tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor, instruccion.linea, instruccion.columna, ambito);
+        errores.push(tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor, instruccion.linea, instruccion.columna, ambito));
        //console.log(tsglobal);
     }
     guardarVariables(tslocal, instruccion.id);
@@ -178,20 +185,16 @@ function ejecutarAsignacion(instruccion, tsglobal, tslocal){
     //console.log(instruccion.expresion);
     let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
     if(tslocal !== undefined){
-        console.log("tengo local");
         let valorr = tslocal.obtener(instruccion.id);
         if(valorr){
-            console.log("existo en la local");
-            tslocal.modificar(instruccion.id, valor);
+            errores.push(tslocal.modificar(instruccion.id, valor));
         }
         else{
-            console.log("tengo local pero no estoy en local");
-            tsglobal.modificar(instruccion.id, valor);
+            errores.push(tsglobal.modificar(instruccion.id, valor));
         }
     }
     else {
-        console.log("soy una global");
-        tsglobal.modificar(instruccion.id, valor);
+        errores.push(tsglobal.modificar(instruccion.id, valor));
     }
 }
 
@@ -304,16 +307,18 @@ function ejecutarLlamado(instruccion, tsglobal, tslocal){
                 indice += 1;
             });
             let tslocal2 = new TablaS([]);
-            tslocal2.agregarParametros(nuevoParametro, nuevoExpresiones, instruccion.linea, instruccion.columna, ambito);
+            errores.concat(tslocal2.agregarParametros(nuevoParametro, nuevoExpresiones, instruccion.linea, instruccion.columna, ambito));
             guardarParametrosG(tslocal2, nuevoParametro);
             //console.log(tslocal2);
             ambito = "metodo " + metodo.id;
             ejecutarbloquelocal(metodo.instrucciones, tsglobal, tslocal2, instruccion.linea, instruccion.columna, ambito);
         }else{
             console.log("No vienen correcto el numero de parametros");
+            errores.push("Error semantico: El numero de parametros en la llamada no corresponde en " + metodo.id);
         }
     }else{
         console.log("no existe este metodo");
+        errores.push("Error semantico: El metodo " + instruccion.id + " No existe");
     }
 }
 
@@ -328,6 +333,17 @@ function guardarParametrosG(ts, parametros){
         guardarVariables(ts, parametro.id);
     });
     console.log("");
+}
+
+function construirError(){
+    let str = "";
+    console.log(errores);
+    errores.forEach((error) => {
+        if(error !== undefined){
+            str += error + "\n";
+        }
+    });
+    return str;
 }
 
 module.exports.ejecutar = ejecutar;

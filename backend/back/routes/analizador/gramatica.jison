@@ -94,7 +94,7 @@
 [0-9]+\b                        return 'ENTERO';
 ([a-zA-Z])[a-zA-Z0-9_]*         return 'IDENTIFICADOR';
 \'[^\']\'                       { yytext = yytext.substr(1, yyleng-2); return 'CHAR'; }
-\"[^\"]*\"                      { yytext = yytext.substr(1, yyleng-2); return 'CADENA'; }
+\".*\"                          { yytext = yytext.substr(1, yyleng-2); return 'CADENA'; }
 
 //con slash invertido o con problemas
 "\n"                return 'SALTOLINEA';
@@ -106,7 +106,7 @@
 
 <<EOF>>                 return 'EOF';
 
-.                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
+.                       { errores.push('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
 /lex
 
 %{//importar de otras clases
@@ -114,6 +114,7 @@
     const tipoOperacion = require('../arbol/instrucciones').TIPO_OPERACION;
     const tipoValor = require('../arbol/instrucciones').TIPO_VALOR;
     const tipoDato = require('../arbol/tablasimbolos').TIPO_DATO;
+    let errores = [];
 %}
 
 /* Asociación de operadores y precedencia */
@@ -137,7 +138,7 @@
 %% /* Definición de la gramática */
 
 INICIO
-	: INSTRUCCIONGLOBAL EOF  {console.log('Lectura Correcta'); return $1;}
+	: INSTRUCCIONGLOBAL EOF  {console.log('Lectura Correcta'); errorsCopy = errores.map((x) => x); errores = []; return [$1, errorsCopy]; }
 ;
 
 TIPO
@@ -180,7 +181,7 @@ EXP
     |INSTRETUR                      { $$ = $1; }
     |IDENTIFICADOR CORIZQ EXP CORDER                    { $$ = instrucciones.nuevoValor(tipoValor.IDENTIFICADOR, $1); }
     |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER      { $$ = instrucciones.nuevoValor(tipoValor.IDENTIFICADOR, $1); }
-;
+    ;
 
 DEFTER
     :EXP INTERR EXP DOSPUNTOS EXP
@@ -188,8 +189,8 @@ DEFTER
 
 INSTRUCCIONGLOBAL
      :INSTRUCCIONGLOBAL ELEMGLOBAL        { $1.push($2); $$ = $1; }
-     |ELEMGLOBAL                      { $$ = [$1]; }
-;
+     |ELEMGLOBAL                          { $$ = [$1]; }
+     ;
 
 ELEMGLOBAL
      :DECLARACION                   { $$ = $1; }
@@ -198,6 +199,7 @@ ELEMGLOBAL
      |METODO                        { $$ = $1; }
      |FUNCION                       { $$ = $1; }
      |EXEC LLAMADA PTCOMA           { $$ = instrucciones.nuevoExc($2); }
+     |error     { errores.push('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
 INSTRUCCIONES
@@ -221,6 +223,7 @@ ELEMINST
      |IMPRIMIR                      { $$ = $1; }
      |LISTAGREGAR                   { $$ = $1; }
      |LLAMADA PTCOMA                { $$ = $1; }
+     |error     { errores.push('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
 CASTEO
@@ -294,8 +297,8 @@ DEFDOWHILE
 ;
 
 METODO
-    :VOID IDENTIFICADOR PARIZQ LISTAPAR PARDER LLAVIZQ INSTRUCCIONES LLAVDER { $$ = instrucciones.nuevoMetodo($2, $4, $7); }
-    |VOID IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER { $$ = instrucciones.nuevoMetodo($2, [], $6); }
+    :VOID IDENTIFICADOR PARIZQ LISTAPAR PARDER LLAVIZQ INSTRUCCIONES LLAVDER { $$ = instrucciones.nuevoMetodo($2, $4, $7, this._$.first_line, this._$.first_column); }
+    |VOID IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER { $$ = instrucciones.nuevoMetodo($2, [], $6, this._$.first_line, this._$.first_column); }
 ;
 
 FUNCION

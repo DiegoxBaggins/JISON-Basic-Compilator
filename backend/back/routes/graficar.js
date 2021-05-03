@@ -445,7 +445,7 @@ function procesarexp(expresion, number){
 }
 
 function procesarDato(expresion){
-    console.log(expresion);
+    //console.log(expresion);
     switch(expresion.tipo){
         case tipoValor.ENTERO:
             return expresion.valor.toString();

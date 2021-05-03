@@ -159,12 +159,14 @@ const INSTRUCCION = {
             instrucciones:instrucciones
         }
     },
-    nuevoMetodo: function (identificador, parametros, instrucciones){
+    nuevoMetodo: function (identificador, parametros, instrucciones, linea, columna){
         return{
             tipo: TIPO_INSTRUCCION.METODO,
             id: identificador,
             parametros: parametros,
-            instrucciones: instrucciones
+            instrucciones: instrucciones,
+            linea: linea,
+            columna: columna
         }
     },
     nuevoParametro: function (tipo, id){

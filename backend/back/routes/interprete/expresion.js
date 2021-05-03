@@ -744,7 +744,12 @@ function procesarexpresion(expresion, tsglobal, tslocal){
         return { tipo:tipoDato.CHAR, valor: expresion.valor}
     }
     else if(expresion.tipo === tipoValor.STRING){
-        return { tipo:tipoDato.STRING, valor: expresion.valor}
+        let valor = expresion.valor.replace(/\\n/g, "\n");
+        valor = valor.replace(/\\t/g, "\t");
+        valor = valor.replace(/\\r/g, "\r");
+        valor = valor.replace(/\\'/g, "\'");
+        valor = valor.replace(/\\"/g, "\"");
+        return { tipo:tipoDato.STRING, valor: valor }
     }
     else if(expresion.tipo === tipoValor.IDENTIFICADOR){
         if(tslocal !== undefined){

@@ -29,7 +29,8 @@ class TablaS {
     agregar(tipo, tipo2, id, valor, linea, columna, ambito){
         let simbolo = this.obtener(id);
         if(simbolo !== undefined){
-            console.log("simbolo ya existe")
+            console.log("simbolo ya existe");
+            return "Error semantico: Simbolo:" + id + " Ya existe";
         }else{
             let valorr = {tipo: tipo, valor: valor.valor }
             let valorNuevo = comprobarCasteos(valorr, valor);
@@ -38,6 +39,7 @@ class TablaS {
                 console.log("simbolo registrado con exito");
             }else{
                 console.log('error semantico');
+                return "Error semantico: Simbolo:" + id + " No concuerda con los tipos asignados. T1:" + tipo + " != T2:" + valor.tipo;
             }
         }
     }
@@ -49,7 +51,8 @@ class TablaS {
     modificar(id, valor){
         let valorr = this._simbolos.filter((simbolo) => simbolo.id === id)[0];
         if (valorr === undefined){
-            console.log('error no existe la variable')
+            console.log('error no existe la variable');
+            return "Error semantico: Simbolo:" + id + " No existe";
         }else{
             //console.log(valorr);
             //console.log(valor);
@@ -59,23 +62,21 @@ class TablaS {
             }
             else{
                 console.log("Los tipos no coinciden");
+                return "Error semantico: Simbolo:" + id + " No concuerda con los tipos asignados. T1:" + valorr.tipo + " != T2:" + valor.tipo;
             }
         }
     }
 
     agregarParametros(parametros, expresiones, linea, columna, ambito){
         console.log(parametros, expresiones);
+        let str1 = [];
         let indice= 0;
         parametros.forEach((parametro)=>{
             let expresion = expresiones[indice];
-            let valorr = this.obtener(parametro.id);
-            if(valorr){
-                this.modificar(parametro.id, expresion);
-            }else{
-                this.agregar(parametro.tipo, undefined, parametro.id, expresion, linea, columna, ambito);
-            }
+            str1.push(this.agregar(parametro.tipo, undefined, parametro.id, expresion, linea, columna, ambito));
             indice = indice + 1;
         });
+        return str1;
     }
 
     get simbolos(){
@@ -83,17 +84,23 @@ class TablaS {
     }
 
     agregarGeneral(valor){
-        let valorr = this._simbolos.filter((simbolo) => simbolo.id === valor.id)[0];
+        let valorr = this._simbolos.filter((simbolo) => simbolo.id === valor.id
+        && valor.linea === simbolo.linea && valor.columna === simbolo.columna)[0];
         if (valorr === undefined){
             this._simbolos.push(valor);
         }else{
-            if( valor.linea === valorr.linea && valor.columna === valorr.columna){
                 console.log('error la variable ya existe');
-            }
-            else{
-                this._simbolos.push(valor);
-            }
         }
+    }
+
+    agregarMetodos(metodos){
+        metodos.forEach((metodo) => {
+            if(metodo.tipo === "INSTR_METODO"){
+                this._simbolos.push(crearSimbolo("METODO", "", metodo.id, 0, metodo.linea, metodo.columna, "Global"));
+            }else{
+
+            }
+        });
     }
 }
 

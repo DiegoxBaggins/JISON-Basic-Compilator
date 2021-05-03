@@ -50,7 +50,8 @@ class Base extends Component{
 
     compilar = () => {
         this.setState({
-            imagenArbol: null
+            imagenArbol: null,
+            variables: []
         });
         let texto = {
             text: this.state.text1

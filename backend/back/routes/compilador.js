@@ -19,10 +19,11 @@ router.post('/texto', function(req, res, next) {
         let valor = req.body.text;
         console.log(valor);
         let arbol = parser.parse(valor);
-        let lista = interprete.ejecutar(arbol);
+        console.log(arbol[1]);
+        let lista = interprete.ejecutar(arbol[0], arbol[1]);
         let salida = lista[0];
         tablaGeneral = lista[1];
-        graficarArbol(arbol);
+        graficarArbol(arbol[0]);
         res.send(salida);
     }
     catch (e){
