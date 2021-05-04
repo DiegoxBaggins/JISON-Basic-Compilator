@@ -132,13 +132,16 @@ class TablaS {
         }
     }
 
-    agregarMetodos(metodos){
+    agregarMetodos(metodos, funciones){
         metodos.forEach((metodo) => {
             if(metodo.tipo === "INSTR_METODO"){
                 this._simbolos.push(crearSimbolo("METODO", "", metodo.id, 0, metodo.linea, metodo.columna, "Global"));
-            }else{
-
             }
+        });
+        funciones.forEach((funcion) =>{
+           if(funcion.tipo === "INSTR_FUNCION"){
+               this._simbolos.push(crearSimbolo("FUNCION", funcion.tipoDato, funcion.id, 0, funcion.linea, funcion.columna, "Global"));
+           }
         });
     }
 }

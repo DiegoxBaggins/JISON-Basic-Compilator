@@ -2,180 +2,156 @@ digraph G{
 rankdir=TB
 Nodo0[label="Arbol"]
 Nodo0->Nodo1;
-Nodo1[label ="Declaracion Definida"]
-Nodo2[label ="Tipo Dato:  Int"]
+Nodo1[label ="Metodo"]
+Nodo2[label ="Id: Principal"]
 Nodo1->Nodo2;
-Nodo3[label ="Id: a"]
+Nodo3[label ="Instrucciones"]
 Nodo1->Nodo3;
-Nodo1->Nodo4;
-Nodo4[label ="15"]
-Nodo0->Nodo5;
-Nodo5[label ="Metodo"]
-Nodo6[label ="Id: metodo1"]
-Nodo5->Nodo6;
-Nodo7[label ="Parametros"]
-Nodo5->Nodo7;
-Nodo8[label ="id= dia, tipo: Int"]
+Nodo3->Nodo4;
+Nodo4[label ="Print"]
+Nodo4->Nodo5;
+Nodo5[label ="-----------Factorial Iterativo---------"]
+Nodo3->Nodo6;
+Nodo6[label ="Print"]
+Nodo6->Nodo7;
+Nodo7[label ="+"]
 Nodo7->Nodo8;
-Nodo9[label ="Instrucciones"]
-Nodo5->Nodo9;
+Nodo8[label ="8! = "]
+Nodo7->Nodo9;
+Nodo9[label ="Llamado"]
+Nodo10[label ="Id: factorialIterativo"]
 Nodo9->Nodo10;
-Nodo10[label ="Print"]
-Nodo10->Nodo11;
-Nodo11[label ="dia"]
-Nodo9->Nodo12;
-Nodo12[label ="For"]
-Nodo12->Nodo13;
-Nodo13[label ="Asignacion"]
-Nodo14[label ="Id: dia"]
-Nodo13->Nodo14;
-Nodo13->Nodo15;
-Nodo15[label ="0"]
-Nodo16[label ="Condicion"]
-Nodo12->Nodo16;
+Nodo11[label ="Parametros"]
+Nodo9->Nodo11;
+Nodo11->Nodo12;
+Nodo12[label ="8"]
+Nodo3->Nodo14;
+Nodo14[label ="Print"]
+Nodo14->Nodo15;
+Nodo15[label ="-----------Factorial Recursivo---------"]
+Nodo3->Nodo16;
+Nodo16[label ="Print"]
 Nodo16->Nodo17;
-Nodo17[label ="<"]
+Nodo17[label ="+"]
 Nodo17->Nodo18;
-Nodo18[label ="dia"]
+Nodo18[label ="8! = "]
 Nodo17->Nodo19;
-Nodo19[label ="10"]
-Nodo12->Nodo20;
-Nodo20[label ="Asignacion"]
-Nodo21[label ="Id: dia"]
-Nodo20->Nodo21;
-Nodo20->Nodo22;
-Nodo22[label ="++"]
-Nodo22->Nodo23;
-Nodo23[label ="dia"]
-Nodo24[label ="Instrucciones"]
-Nodo12->Nodo24;
-Nodo24->Nodo25;
-Nodo25[label ="Switch"]
-Nodo26[label ="Condicion"]
+Nodo19[label ="Llamado"]
+Nodo20[label ="Id: factorialRecursivo"]
+Nodo19->Nodo20;
+Nodo21[label ="Parametros"]
+Nodo19->Nodo21;
+Nodo21->Nodo22;
+Nodo22[label ="8"]
+Nodo0->Nodo25;
+Nodo25[label ="Funcion"]
+Nodo26[label ="Tipo:  Int"]
 Nodo25->Nodo26;
-Nodo26->Nodo27;
-Nodo27[label ="dia"]
-Nodo28[label ="Case"]
+Nodo27[label ="Id: factorialIterativo"]
+Nodo25->Nodo27;
+Nodo28[label ="Parametros"]
 Nodo25->Nodo28;
-Nodo29[label ="Condicion"]
-Nodo28->Nodo29;
-Nodo29->Nodo30;
-Nodo30[label ="1"]
-Nodo31[label ="Instrucciones"]
-Nodo28->Nodo31;
+Nodo29[label ="id= n, tipo: Int"]
+Nodo27->Nodo29;
+Nodo30[label ="Instrucciones"]
+Nodo25->Nodo30;
+Nodo30->Nodo31;
+Nodo31[label ="Declaracion Definida"]
+Nodo32[label ="Tipo Dato:  Int"]
 Nodo31->Nodo32;
-Nodo32[label ="Print"]
-Nodo32->Nodo33;
-Nodo33[label ="Hoy es lunes"]
-Nodo34[label ="Case"]
-Nodo25->Nodo34;
-Nodo35[label ="Condicion"]
-Nodo34->Nodo35;
+Nodo33[label ="Id: resultado"]
+Nodo31->Nodo33;
+Nodo31->Nodo34;
+Nodo34[label ="1"]
+Nodo30->Nodo35;
+Nodo35[label ="For"]
 Nodo35->Nodo36;
-Nodo36[label ="2"]
-Nodo37[label ="Instrucciones"]
-Nodo34->Nodo37;
-Nodo37->Nodo38;
-Nodo38[label ="Print"]
-Nodo38->Nodo39;
-Nodo39[label ="Hoy es martes"]
-Nodo40[label ="Case"]
-Nodo25->Nodo40;
-Nodo41[label ="Condicion"]
+Nodo36[label ="Declaracion Definida"]
+Nodo37[label ="Tipo Dato:  Int"]
+Nodo36->Nodo37;
+Nodo38[label ="Id: i"]
+Nodo36->Nodo38;
+Nodo36->Nodo39;
+Nodo39[label ="1"]
+Nodo40[label ="Condicion"]
+Nodo35->Nodo40;
 Nodo40->Nodo41;
+Nodo41[label ="<="]
 Nodo41->Nodo42;
-Nodo42[label ="3"]
-Nodo43[label ="Instrucciones"]
-Nodo40->Nodo43;
-Nodo43->Nodo44;
-Nodo44[label ="Print"]
+Nodo42[label ="i"]
+Nodo41->Nodo43;
+Nodo43[label ="n"]
+Nodo35->Nodo44;
+Nodo44[label ="Adicion"]
+Nodo45[label ="Id: i ++"]
 Nodo44->Nodo45;
-Nodo45[label ="Hoy es miercoles"]
-Nodo46[label ="Case"]
-Nodo25->Nodo46;
-Nodo47[label ="Condicion"]
+Nodo46[label ="Instrucciones"]
+Nodo35->Nodo46;
 Nodo46->Nodo47;
+Nodo47[label ="Asignacion"]
+Nodo48[label ="Id: resultado"]
 Nodo47->Nodo48;
-Nodo48[label ="4"]
-Nodo49[label ="Instrucciones"]
-Nodo46->Nodo49;
+Nodo47->Nodo49;
+Nodo49[label ="*"]
 Nodo49->Nodo50;
-Nodo50[label ="Print"]
-Nodo50->Nodo51;
-Nodo51[label ="Hoy es jueves"]
+Nodo50[label ="resultado"]
+Nodo49->Nodo51;
+Nodo51[label ="i"]
 Nodo52[label="Return"]
-Nodo49->Nodo52;
-Nodo53[label ="Case"]
-Nodo25->Nodo53;
-Nodo54[label ="Condicion"]
-Nodo53->Nodo54;
+Nodo30->Nodo52;
+Nodo31->Nodo53;
+Nodo53[label ="resultado"]
+Nodo0->Nodo54;
+Nodo54[label ="Funcion"]
+Nodo55[label ="Tipo:  Int"]
 Nodo54->Nodo55;
-Nodo55[label ="5"]
-Nodo56[label ="Instrucciones"]
-Nodo53->Nodo56;
-Nodo56->Nodo57;
-Nodo57[label ="Print"]
-Nodo57->Nodo58;
-Nodo58[label ="Hoy es viernes"]
-Nodo59[label ="Case"]
-Nodo25->Nodo59;
-Nodo60[label ="Condicion"]
+Nodo56[label ="Id: factorialRecursivo"]
+Nodo54->Nodo56;
+Nodo57[label ="Parametros"]
+Nodo54->Nodo57;
+Nodo58[label ="id= n, tipo: Int"]
+Nodo56->Nodo58;
+Nodo59[label ="Instrucciones"]
+Nodo54->Nodo59;
 Nodo59->Nodo60;
+Nodo60[label ="Bloque If"]
+Nodo61[label ="If/ If-Else"]
 Nodo60->Nodo61;
-Nodo61[label ="6"]
-Nodo62[label ="Instrucciones"]
-Nodo59->Nodo62;
+Nodo62[label ="Condicion"]Nodo61->Nodo62;
 Nodo62->Nodo63;
-Nodo63[label ="Print"]
+Nodo63[label ="=="]
 Nodo63->Nodo64;
-Nodo64[label ="Hoy es sabado"]
-Nodo65[label ="Case"]
-Nodo25->Nodo65;
-Nodo66[label ="Condicion"]
-Nodo65->Nodo66;
+Nodo64[label ="n"]
+Nodo63->Nodo65;
+Nodo65[label ="0"]
+Nodo66[label ="Instrucciones"]
+Nodo61->Nodo66;
+Nodo67[label="Return"]
 Nodo66->Nodo67;
-Nodo67[label ="7"]
-Nodo68[label ="Instrucciones"]
-Nodo65->Nodo68;
-Nodo68->Nodo69;
-Nodo69[label ="Print"]
-Nodo69->Nodo70;
-Nodo70[label ="Hoy es domingo"]
-Nodo71[label ="Default"]
-Nodo25->Nodo71;
-Nodo72[label ="Instrucciones"]
-Nodo71->Nodo72;
+Nodo67->Nodo68;
+Nodo68[label ="1"]
+Nodo69[label="Return"]
+Nodo59->Nodo69;
+Nodo60->Nodo70;
+Nodo70[label ="*"]
+Nodo70->Nodo71;
+Nodo71[label ="n"]
+Nodo70->Nodo72;
+Nodo72[label ="Llamado"]
+Nodo73[label ="Id: factorialRecursivo"]
 Nodo72->Nodo73;
-Nodo73[label ="Print"]
-Nodo73->Nodo74;
-Nodo74[label ="saber que dia es hoy"]
-Nodo24->Nodo75;
-Nodo75[label ="Bloque If"]
-Nodo76[label ="If/ If-Else"]
+Nodo74[label ="Parametros"]
+Nodo72->Nodo74;
+Nodo74->Nodo75;
+Nodo75[label ="-"]
 Nodo75->Nodo76;
-Nodo77[label ="Condicion"]Nodo76->Nodo77;
-Nodo77->Nodo78;
-Nodo78[label =">"]
-Nodo78->Nodo79;
-Nodo79[label ="dia"]
-Nodo78->Nodo80;
-Nodo80[label ="5"]
-Nodo81[label ="Instrucciones"]
-Nodo76->Nodo81;
-Nodo82[label="Break"]
-Nodo81->Nodo82;
-Nodo24->Nodo83;
-Nodo83[label ="Print"]
-Nodo83->Nodo84;
-Nodo84[label ="Antes del break"]
-Nodo0->Nodo85;
-Nodo85[label ="Exec"]
-Nodo85->Nodo86;
-Nodo86[label ="Llamado"]
-Nodo87[label ="Id: metodo1"]
-Nodo86->Nodo87;
-Nodo88[label ="Parametros"]
-Nodo86->Nodo88;
-Nodo88->Nodo89;
-Nodo89[label ="2"]
+Nodo76[label ="n"]
+Nodo75->Nodo77;
+Nodo77[label ="1"]
+Nodo0->Nodo79;
+Nodo79[label ="Exec"]
+Nodo79->Nodo80;
+Nodo80[label ="Llamado"]
+Nodo81[label ="Id: Principal"]
+Nodo80->Nodo81;
 }

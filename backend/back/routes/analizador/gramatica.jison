@@ -185,7 +185,7 @@ EXP
     ;
 
 DEFTER
-    :EXP INTERR EXP DOSPUNTOS EXP
+    :EXP INTERR EXP DOSPUNTOS EXP         { $$ = instrucciones.nuevoTer($1, $3, $5); }
 ;
 
 INSTRUCCIONGLOBAL
@@ -300,12 +300,12 @@ DEFDOWHILE
 
 METODO
     :VOID IDENTIFICADOR PARIZQ LISTAPAR PARDER LLAVIZQ INSTRUCCIONES LLAVDER { $$ = instrucciones.nuevoMetodo($2, $4, $7, this._$.first_line, this._$.first_column); }
-    |VOID IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER { $$ = instrucciones.nuevoMetodo($2, [], $6, this._$.first_line, this._$.first_column); }
+    |VOID IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER          { $$ = instrucciones.nuevoMetodo($2, [], $6, this._$.first_line, this._$.first_column); }
 ;
 
 FUNCION
-    :TIPO IDENTIFICADOR PARIZQ LISTAPAR PARDER LLAVIZQ INSTRUCCIONES LLAVDER
-    |TIPO IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER
+    :TIPO IDENTIFICADOR PARIZQ LISTAPAR PARDER LLAVIZQ INSTRUCCIONES LLAVDER { $$ = instrucciones.nuevaFuncion($1, $2, $4, $7, this._$.first_line, this._$.first_column); }
+    |TIPO IDENTIFICADOR PARIZQ PARDER LLAVIZQ INSTRUCCIONES LLAVDER          { $$ = instrucciones.nuevaFuncion($1, $2, [], $6, this._$.first_line, this._$.first_column); }
 ;
 
 LISTAPAR
@@ -339,29 +339,29 @@ IMPRIMIR
 ;
 
 INSTLOWER
-    :TOLOWER PARIZQ EXP PARDER
+    :TOLOWER PARIZQ EXP PARDER              { $$ = instrucciones.nuevoLower($3); }
 ;
 
 INSTUPPER
-    :TOUPPER PARIZQ EXP PARDER
+    :TOUPPER PARIZQ EXP PARDER              { $$ = instrucciones.nuevoUpper($3); }
 ;
 
 INSLENGTH
-    :LENGTH PARIZQ EXP PARDER
+    :LENGTH PARIZQ EXP PARDER               { $$ = instrucciones.nuevoLen($3); }
 ;
 
 INSTRUNCATE
-    :TRUNCATE PARIZQ EXP PARDER
+    :TRUNCATE PARIZQ EXP PARDER             { $$ = instrucciones.nuevoTrun($3); }
 ;
 
 INSROUND
-    :ROUND PARIZQ EXP PARDER
+    :ROUND PARIZQ EXP PARDER                { $$ = instrucciones.nuevoRound($3); }
 ;
 
 INSTYPE
-    :TYPEOF PARIZQ EXP PARDER
+    :TYPEOF PARIZQ EXP PARDER               { $$ = instrucciones.nuevoType($3); }
 ;
 
 INSTOSTR
-    :TOSTR PARIZQ EXP PARDER
+    :TOSTR PARIZQ EXP PARDER                { $$ = instrucciones.nuevoTostr($3); }
 ;

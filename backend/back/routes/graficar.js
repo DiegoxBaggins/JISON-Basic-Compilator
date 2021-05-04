@@ -113,6 +113,12 @@ function ejecutarbloque(instrucciones, number){
             number = arreglo[0];
             str += arreglo[1];
         }
+        else if(instruccion.tipo === tipoInstruccion.FUNCION){
+            str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+            let arreglo = ejFuncion(instruccion, number);
+            number = arreglo[0];
+            str += arreglo[1];
+        }
         else if(instruccion.tipo === tipoInstruccion.BREAK){
             str += "Nodo" + number.toString() + "[label=\"Return\"]\n";
             str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
@@ -128,9 +134,10 @@ function ejecutarbloque(instrucciones, number){
             }else{
                 str += "Nodo" + number.toString() + "[label=\"Return\"]\n";
                 str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+                let pivote2 = pivote + 1;
                 number += 1;
-                str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
-                let lista = procesarexp(instruccion.exp);
+                str += "Nodo" + pivote2.toString() + "->Nodo" + number.toString() + ";\n";
+                let lista = procesarexp(instruccion.exp, number);
                 number = lista[0];
                 str += lista[1];
             }
@@ -447,6 +454,39 @@ function ejMetodo(instruccion, number){
     return [number, str];
 }
 
+function ejFuncion(instruccion, number){
+    let str = "";
+    let pivote = number;
+    str += "Nodo" + number.toString() + "[label =\"Funcion\"]\n";
+    number += 1;
+    str += "Nodo" + number.toString() + "[label =\"Tipo: ";
+    let dato = regresarDato(instruccion.tipoDato);
+    str += dato;
+    str += "\nNodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+    number += 1;
+    str += "Nodo" + number.toString() + "[label =\"Id: " + instruccion.id + "\"]\n";
+    str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+    number +=1;
+    if(instruccion.parametros.length > 0) {
+        str += "Nodo" + number.toString() + "[label =\"Parametros\"]\n";
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        pivote += 2;
+        number += 1;
+        instruccion.parametros.forEach((parametro) => {
+            str += "Nodo" + number.toString() + "[label =\"id= " + parametro.id +", tipo:" + regresarDato(parametro.tipo) + "\n";
+            str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+            number += 1;
+        });
+        pivote-=2;
+    }
+    str += "Nodo" + number.toString() + "[label =\"Instrucciones\"]\n";
+    str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+    let arreglo = ejecutarbloque(instruccion.instrucciones, number);
+    number = arreglo[0];
+    str += arreglo[1];
+    return [number, str];
+}
+
 function ejLlamado(instruccion, number){
     let str = "";
     let pivote = number;
@@ -486,7 +526,13 @@ function ejExec(instruccion, number){
 function procesarexp(expresion, number){
     let str ="";
     let pivote = number;
-    str += "Nodo" + pivote.toString() + "[label =\"" + procesarDato(expresion) + "\"]\n";
+    if(expresion.tipo === tipoInstruccion.LLAMADA){
+        let valores = ejLlamado(expresion, number);
+        number = valores[0];
+        str += valores[1];
+    }else{
+        str += "Nodo" + pivote.toString() + "[label =\"" + procesarDato(expresion) + "\"]\n";
+    }
     if(expresion.operandoIzq !== undefined){
         number += 1;
         str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";

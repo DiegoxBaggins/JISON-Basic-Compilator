@@ -191,6 +191,9 @@ break;
 case 38: case 48: case 65:
  errores.push(instrucciones.nuevoError("Sintactico" ,'Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column,this._$.first_line,this._$.first_column)); 
 break;
+case 39:
+ this.$ = instrucciones.nuevoTer($$[$0-4], $$[$0-2], $$[$0]); 
+break;
 case 40: case 49:
  $$[$0-1].push($$[$0]); this.$ = $$[$0-1]; 
 break;
@@ -272,6 +275,12 @@ break;
 case 97:
  this.$ = instrucciones.nuevoMetodo($$[$0-5], [], $$[$0-1], this._$.first_line, this._$.first_column); 
 break;
+case 98:
+ this.$ = instrucciones.nuevaFuncion($$[$0-7], $$[$0-6], $$[$0-4], $$[$0-1], this._$.first_line, this._$.first_column); 
+break;
+case 99:
+ this.$ = instrucciones.nuevaFuncion($$[$0-6], $$[$0-5], [], $$[$0-1], this._$.first_line, this._$.first_column); 
+break;
 case 100:
  $$[$0-3].push(instrucciones.nuevoParametro($$[$0-1],$$[$0])); this.$ = $$[$0-3]; 
 break;
@@ -289,6 +298,27 @@ case 104:
 break;
 case 114:
  this.$ = instrucciones.nuevoImprimir($$[$0-2]); 
+break;
+case 115:
+ this.$ = instrucciones.nuevoLower($$[$0-1]); 
+break;
+case 116:
+ this.$ = instrucciones.nuevoUpper($$[$0-1]); 
+break;
+case 117:
+ this.$ = instrucciones.nuevoLen($$[$0-1]); 
+break;
+case 118:
+ this.$ = instrucciones.nuevoTrun($$[$0-1]); 
+break;
+case 119:
+ this.$ = instrucciones.nuevoRound($$[$0-1]); 
+break;
+case 120:
+ this.$ = instrucciones.nuevoType($$[$0-1]); 
+break;
+case 121:
+ this.$ = instrucciones.nuevoTostr($$[$0-1]); 
 break;
 }
 },

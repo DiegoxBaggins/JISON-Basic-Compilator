@@ -54,7 +54,14 @@ const TIPO_INSTRUCCION = {
     TERNARIO:           'INSTR_TERNARIO',
     EXC:                'INSTR_EXC',
     ERROR:              'INSTR_ERROR',
-    RETURN:             'INSTR_RETURN'
+    RETURN:             'INSTR_RETURN',
+    LOWER:              'INSTR_LOWER',
+    UPPER:              'INSTR_UPPER',
+    LENG:               'INSTR_LENGHT',
+    TRUNC:              'INSTR_TRUNC',
+    INROUND:            'INSTR_ROUND',
+    TYPE:               'INSTR_TYPEOF',
+    TOSTRING:           'INSTR_TOSTR'
 }
 
 const INSTRUCCION = {
@@ -230,6 +237,66 @@ const INSTRUCCION = {
             descripcion: descripcion,
             linea: linea,
             columna: columna
+        }
+    },
+    nuevaFuncion: function (tipoDato, identificador, parametros, instrucciones, linea, columna){
+        return{
+            tipo: TIPO_INSTRUCCION.FUNCION,
+            tipoDato: tipoDato,
+            id: identificador,
+            parametros: parametros,
+            instrucciones: instrucciones,
+            linea: linea,
+            columna: columna
+        }
+    },
+    nuevoLower: function (exp){
+        return{
+            tipo: TIPO_INSTRUCCION.LOWER,
+            expresion: exp
+        }
+    },
+    nuevoUpper: function (exp){
+        return{
+            tipo: TIPO_INSTRUCCION.UPPER,
+            expresion: exp
+        }
+    },
+    nuevoLen: function (exp){
+        return{
+            tipo: TIPO_INSTRUCCION.LENG,
+            expresion: exp
+        }
+    },
+    nuevoTrun: function (exp){
+        return{
+            tipo: TIPO_INSTRUCCION.TRUNC,
+            expresion: exp
+        }
+    },
+    nuevoRound: function (exp){
+        return{
+            tipo: TIPO_INSTRUCCION.INROUND,
+            expresion: exp
+        }
+    },
+    nuevoType: function (exp){
+        return{
+            tipo: TIPO_INSTRUCCION.TYPE,
+            expresion: exp
+        }
+    },
+    nuevoTostr: function (exp) {
+        return {
+            tipo: TIPO_INSTRUCCION.TOSTRING,
+            expresion: exp
+        }
+    },
+    nuevoTer: function (condicion, exp1, exp2){
+        return {
+            condicion: condicion,
+            exp1: exp1,
+            exp2: exp2
         }
     }
 }
