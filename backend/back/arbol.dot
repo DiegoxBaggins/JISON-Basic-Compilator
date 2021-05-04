@@ -3,155 +3,362 @@ rankdir=TB
 Nodo0[label="Arbol"]
 Nodo0->Nodo1;
 Nodo1[label ="Metodo"]
-Nodo2[label ="Id: Principal"]
+Nodo2[label ="Id: funcionesEspecialesYNativas"]
 Nodo1->Nodo2;
 Nodo3[label ="Instrucciones"]
 Nodo1->Nodo3;
 Nodo3->Nodo4;
-Nodo4[label ="Print"]
+Nodo4[label ="Declaracion Definida"]
+Nodo5[label ="Tipo Dato:  Int"]
 Nodo4->Nodo5;
-Nodo5[label ="-----------Factorial Iterativo---------"]
-Nodo3->Nodo6;
-Nodo6[label ="Print"]
-Nodo6->Nodo7;
-Nodo7[label ="+"]
-Nodo7->Nodo8;
-Nodo8[label ="8! = "]
-Nodo7->Nodo9;
-Nodo9[label ="Llamado"]
-Nodo10[label ="Id: factorialIterativo"]
-Nodo9->Nodo10;
-Nodo11[label ="Parametros"]
-Nodo9->Nodo11;
-Nodo11->Nodo12;
-Nodo12[label ="8"]
-Nodo3->Nodo14;
-Nodo14[label ="Print"]
-Nodo14->Nodo15;
-Nodo15[label ="-----------Factorial Recursivo---------"]
-Nodo3->Nodo16;
-Nodo16[label ="Print"]
-Nodo16->Nodo17;
-Nodo17[label ="+"]
+Nodo6[label ="Id: a"]
+Nodo4->Nodo6;
+Nodo4->Nodo7;
+Nodo7[label ="15"]
+Nodo3->Nodo8;
+Nodo8[label ="Print"]
+Nodo8->Nodo9;
+Nodo9[label ="------------------TOLOWER-------------------"]
+Nodo3->Nodo10;
+Nodo10[label ="Print"]
+Nodo10->Nodo11;
+Nodo11[label ="SIN TOLOWER"]
+Nodo3->Nodo12;
+Nodo12[label ="Print"]
+Nodo12->Nodo13;
+Nodo13[label="ToLower"]
+Nodo13->Nodo14;
+Nodo14[label ="CON TOLOWER"]
+Nodo3->Nodo15;
+Nodo15[label ="Print"]
+Nodo15->Nodo16;
+Nodo16[label ="------------------TOUPPER-------------------"]
+Nodo3->Nodo17;
+Nodo17[label ="Print"]
 Nodo17->Nodo18;
-Nodo18[label ="8! = "]
-Nodo17->Nodo19;
-Nodo19[label ="Llamado"]
-Nodo20[label ="Id: factorialRecursivo"]
+Nodo18[label ="sin toupper"]
+Nodo3->Nodo19;
+Nodo19[label ="Print"]
 Nodo19->Nodo20;
-Nodo21[label ="Parametros"]
-Nodo19->Nodo21;
-Nodo21->Nodo22;
-Nodo22[label ="8"]
-Nodo0->Nodo25;
-Nodo25[label ="Funcion"]
-Nodo26[label ="Tipo:  Int"]
-Nodo25->Nodo26;
-Nodo27[label ="Id: factorialIterativo"]
-Nodo25->Nodo27;
-Nodo28[label ="Parametros"]
-Nodo25->Nodo28;
-Nodo29[label ="id= n, tipo: Int"]
-Nodo27->Nodo29;
-Nodo30[label ="Instrucciones"]
-Nodo25->Nodo30;
-Nodo30->Nodo31;
-Nodo31[label ="Declaracion Definida"]
-Nodo32[label ="Tipo Dato:  Int"]
-Nodo31->Nodo32;
-Nodo33[label ="Id: resultado"]
-Nodo31->Nodo33;
-Nodo31->Nodo34;
-Nodo34[label ="1"]
-Nodo30->Nodo35;
-Nodo35[label ="For"]
-Nodo35->Nodo36;
-Nodo36[label ="Declaracion Definida"]
-Nodo37[label ="Tipo Dato:  Int"]
+Nodo20[label="ToUpper"]
+Nodo20->Nodo21;
+Nodo21[label ="con toupper"]
+Nodo3->Nodo22;
+Nodo22[label ="Print"]
+Nodo22->Nodo23;
+Nodo23[label ="------------------TRUNCATE------------------"]
+Nodo3->Nodo24;
+Nodo24[label ="Declaracion Definida"]
+Nodo25[label ="Tipo Dato:  Double"]
+Nodo24->Nodo25;
+Nodo26[label ="Id: b"]
+Nodo24->Nodo26;
+Nodo24->Nodo27;
+Nodo27[label ="17.8"]
+Nodo3->Nodo28;
+Nodo28[label ="Print"]
+Nodo28->Nodo29;
+Nodo29[label ="+"]
+Nodo29->Nodo30;
+Nodo30[label ="sin truncate: "]
+Nodo29->Nodo31;
+Nodo31[label ="b"]
+Nodo3->Nodo32;
+Nodo32[label ="Asignacion"]
+Nodo33[label ="Id: b"]
+Nodo32->Nodo33;
+Nodo32->Nodo34;
+Nodo34[label="Truncate"]
+Nodo34->Nodo35;
+Nodo35[label ="b"]
+Nodo3->Nodo36;
+Nodo36[label ="Print"]
 Nodo36->Nodo37;
-Nodo38[label ="Id: i"]
-Nodo36->Nodo38;
-Nodo36->Nodo39;
-Nodo39[label ="1"]
-Nodo40[label ="Condicion"]
-Nodo35->Nodo40;
+Nodo37[label ="+"]
+Nodo37->Nodo38;
+Nodo38[label ="con truncate "]
+Nodo37->Nodo39;
+Nodo39[label ="b"]
+Nodo3->Nodo40;
+Nodo40[label ="Print"]
 Nodo40->Nodo41;
-Nodo41[label ="<="]
-Nodo41->Nodo42;
-Nodo42[label ="i"]
-Nodo41->Nodo43;
-Nodo43[label ="n"]
-Nodo35->Nodo44;
-Nodo44[label ="Adicion"]
-Nodo45[label ="Id: i ++"]
-Nodo44->Nodo45;
-Nodo46[label ="Instrucciones"]
-Nodo35->Nodo46;
+Nodo41[label ="------------------ROUND-------------------"]
+Nodo3->Nodo42;
+Nodo42[label ="Declaracion Definida"]
+Nodo43[label ="Tipo Dato:  Double"]
+Nodo42->Nodo43;
+Nodo44[label ="Id: c"]
+Nodo42->Nodo44;
+Nodo42->Nodo45;
+Nodo45[label ="26.5"]
+Nodo3->Nodo46;
+Nodo46[label ="Print"]
 Nodo46->Nodo47;
-Nodo47[label ="Asignacion"]
-Nodo48[label ="Id: resultado"]
+Nodo47[label ="+"]
 Nodo47->Nodo48;
+Nodo48[label ="sin round: "]
 Nodo47->Nodo49;
-Nodo49[label ="*"]
-Nodo49->Nodo50;
-Nodo50[label ="resultado"]
-Nodo49->Nodo51;
-Nodo51[label ="i"]
-Nodo52[label="Return"]
-Nodo30->Nodo52;
-Nodo31->Nodo53;
-Nodo53[label ="resultado"]
-Nodo0->Nodo54;
-Nodo54[label ="Funcion"]
-Nodo55[label ="Tipo:  Int"]
+Nodo49[label ="c"]
+Nodo3->Nodo50;
+Nodo50[label ="Asignacion"]
+Nodo51[label ="Id: c"]
+Nodo50->Nodo51;
+Nodo50->Nodo52;
+Nodo52[label="Round"]
+Nodo52->Nodo53;
+Nodo53[label ="c"]
+Nodo3->Nodo54;
+Nodo54[label ="Print"]
 Nodo54->Nodo55;
-Nodo56[label ="Id: factorialRecursivo"]
-Nodo54->Nodo56;
-Nodo57[label ="Parametros"]
-Nodo54->Nodo57;
-Nodo58[label ="id= n, tipo: Int"]
-Nodo56->Nodo58;
-Nodo59[label ="Instrucciones"]
-Nodo54->Nodo59;
-Nodo59->Nodo60;
-Nodo60[label ="Bloque If"]
-Nodo61[label ="If/ If-Else"]
-Nodo60->Nodo61;
-Nodo62[label ="Condicion"]Nodo61->Nodo62;
+Nodo55[label ="+"]
+Nodo55->Nodo56;
+Nodo56[label ="con round "]
+Nodo55->Nodo57;
+Nodo57[label ="c"]
+Nodo3->Nodo58;
+Nodo58[label ="Declaracion Definida"]
+Nodo59[label ="Tipo Dato:  Double"]
+Nodo58->Nodo59;
+Nodo60[label ="Id: cc"]
+Nodo58->Nodo60;
+Nodo58->Nodo61;
+Nodo61[label ="26.4"]
+Nodo3->Nodo62;
+Nodo62[label ="Print"]
 Nodo62->Nodo63;
-Nodo63[label ="=="]
+Nodo63[label ="+"]
 Nodo63->Nodo64;
-Nodo64[label ="n"]
+Nodo64[label ="sin round: "]
 Nodo63->Nodo65;
-Nodo65[label ="0"]
-Nodo66[label ="Instrucciones"]
-Nodo61->Nodo66;
-Nodo67[label="Return"]
+Nodo65[label ="cc"]
+Nodo3->Nodo66;
+Nodo66[label ="Asignacion"]
+Nodo67[label ="Id: cc"]
 Nodo66->Nodo67;
-Nodo67->Nodo68;
-Nodo68[label ="1"]
-Nodo69[label="Return"]
-Nodo59->Nodo69;
-Nodo60->Nodo70;
-Nodo70[label ="*"]
+Nodo66->Nodo68;
+Nodo68[label="Round"]
+Nodo68->Nodo69;
+Nodo69[label ="cc"]
+Nodo3->Nodo70;
+Nodo70[label ="Print"]
 Nodo70->Nodo71;
-Nodo71[label ="n"]
-Nodo70->Nodo72;
-Nodo72[label ="Llamado"]
-Nodo73[label ="Id: factorialRecursivo"]
-Nodo72->Nodo73;
-Nodo74[label ="Parametros"]
-Nodo72->Nodo74;
+Nodo71[label ="+"]
+Nodo71->Nodo72;
+Nodo72[label ="con round "]
+Nodo71->Nodo73;
+Nodo73[label ="cc"]
+Nodo3->Nodo74;
+Nodo74[label ="Print"]
 Nodo74->Nodo75;
-Nodo75[label ="-"]
-Nodo75->Nodo76;
-Nodo76[label ="n"]
-Nodo75->Nodo77;
-Nodo77[label ="1"]
-Nodo0->Nodo79;
-Nodo79[label ="Exec"]
-Nodo79->Nodo80;
-Nodo80[label ="Llamado"]
-Nodo81[label ="Id: Principal"]
+Nodo75[label ="-----------------TYPEOF--------------------"]
+Nodo3->Nodo76;
+Nodo76[label ="Declaracion Definida"]
+Nodo77[label ="Tipo Dato:  String"]
+Nodo76->Nodo77;
+Nodo78[label ="Id: x"]
+Nodo76->Nodo78;
+Nodo76->Nodo79;
+Nodo79[label ="soy una cadena"]
+Nodo3->Nodo80;
+Nodo80[label ="Declaracion Definida"]
+Nodo81[label ="Tipo Dato:  Int"]
 Nodo80->Nodo81;
+Nodo82[label ="Id: y"]
+Nodo80->Nodo82;
+Nodo80->Nodo83;
+Nodo83[label ="50"]
+Nodo3->Nodo84;
+Nodo84[label ="Declaracion Definida"]
+Nodo85[label ="Tipo Dato:  Double"]
+Nodo84->Nodo85;
+Nodo86[label ="Id: z"]
+Nodo84->Nodo86;
+Nodo84->Nodo87;
+Nodo87[label ="78.5"]
+Nodo3->Nodo88;
+Nodo88[label ="Declaracion Definida"]
+Nodo89[label ="Tipo Dato:  Char"]
+Nodo88->Nodo89;
+Nodo90[label ="Id: xx"]
+Nodo88->Nodo90;
+Nodo88->Nodo91;
+Nodo91[label ="a"]
+Nodo3->Nodo92;
+Nodo92[label ="Declaracion Definida"]
+Nodo93[label ="Tipo Dato:  Boolean"]
+Nodo92->Nodo93;
+Nodo94[label ="Id: yy"]
+Nodo92->Nodo94;
+Nodo92->Nodo95;
+Nodo95[label ="true"]
+Nodo3->Nodo96;
+Nodo96[label ="Print"]
+Nodo96->Nodo97;
+Nodo97[label ="+"]
+Nodo97->Nodo98;
+Nodo98[label ="tipo: "]
+Nodo97->Nodo99;
+Nodo99[label="TypeOf"]
+Nodo99->Nodo100;
+Nodo100[label ="x"]
+Nodo3->Nodo101;
+Nodo101[label ="Print"]
+Nodo101->Nodo102;
+Nodo102[label ="+"]
+Nodo102->Nodo103;
+Nodo103[label ="tipo: "]
+Nodo102->Nodo104;
+Nodo104[label="TypeOf"]
+Nodo104->Nodo105;
+Nodo105[label ="y"]
+Nodo3->Nodo106;
+Nodo106[label ="Print"]
+Nodo106->Nodo107;
+Nodo107[label ="+"]
+Nodo107->Nodo108;
+Nodo108[label ="tipo: "]
+Nodo107->Nodo109;
+Nodo109[label="TypeOf"]
+Nodo109->Nodo110;
+Nodo110[label ="z"]
+Nodo3->Nodo111;
+Nodo111[label ="Print"]
+Nodo111->Nodo112;
+Nodo112[label ="+"]
+Nodo112->Nodo113;
+Nodo113[label ="tipo: "]
+Nodo112->Nodo114;
+Nodo114[label="TypeOf"]
+Nodo114->Nodo115;
+Nodo115[label ="xx"]
+Nodo3->Nodo116;
+Nodo116[label ="Print"]
+Nodo116->Nodo117;
+Nodo117[label ="+"]
+Nodo117->Nodo118;
+Nodo118[label ="tipo: "]
+Nodo117->Nodo119;
+Nodo119[label="TypeOf"]
+Nodo119->Nodo120;
+Nodo120[label ="yy"]
+Nodo3->Nodo121;
+Nodo121[label ="Print"]
+Nodo121->Nodo122;
+Nodo122[label ="------------------LENGTH-------------------"]
+Nodo3->Nodo123;
+Nodo123[label ="Declaracion Definida"]
+Nodo124[label ="Tipo Dato:  String"]
+Nodo123->Nodo124;
+Nodo125[label ="Id: cadena"]
+Nodo123->Nodo125;
+Nodo123->Nodo126;
+Nodo126[label ="soy una cadena"]
+Nodo3->Nodo127;
+Nodo127[label ="Print"]
+Nodo127->Nodo128;
+Nodo128[label ="+"]
+Nodo128->Nodo129;
+Nodo129[label ="tamaño: "]
+Nodo128->Nodo130;
+Nodo130[label="Lenght"]
+Nodo130->Nodo131;
+Nodo131[label ="cadena"]
+Nodo3->Nodo132;
+Nodo132[label ="Print"]
+Nodo132->Nodo133;
+Nodo133[label ="------------------TOSTRING-------------------"]
+Nodo3->Nodo134;
+Nodo134[label ="Declaracion Definida"]
+Nodo135[label ="Tipo Dato:  Int"]
+Nodo134->Nodo135;
+Nodo136[label ="Id: numero"]
+Nodo134->Nodo136;
+Nodo134->Nodo137;
+Nodo137[label ="105"]
+Nodo3->Nodo138;
+Nodo138[label ="Print"]
+Nodo138->Nodo139;
+Nodo139[label ="+"]
+Nodo139->Nodo140;
+Nodo140[label ="tipo: "]
+Nodo139->Nodo141;
+Nodo141[label="TypeOf"]
+Nodo141->Nodo142;
+Nodo142[label ="numero"]
+Nodo3->Nodo143;
+Nodo143[label ="Print"]
+Nodo143->Nodo144;
+Nodo144[label ="+"]
+Nodo144->Nodo145;
+Nodo145[label ="tipo: "]
+Nodo144->Nodo146;
+Nodo146[label="TypeOf"]
+Nodo146->Nodo147;
+Nodo147[label="ToString"]
+Nodo147->Nodo148;
+Nodo148[label ="numero"]
+Nodo3->Nodo149;
+Nodo149[label ="Print"]
+Nodo149->Nodo150;
+Nodo150[label ="------------------TERNARIO------------------"]
+Nodo3->Nodo151;
+Nodo151[label ="Declaracion Definida"]
+Nodo152[label ="Tipo Dato:  Int"]
+Nodo151->Nodo152;
+Nodo153[label ="Id: abc"]
+Nodo151->Nodo153;
+Nodo151->Nodo154;
+Nodo154[label="Ternario"]
+Nodo155[label="Condicion"]
+Nodo154->Nodo155;
+Nodo155->Nodo156;
+Nodo156[label ="<"]
+Nodo156->Nodo157;
+Nodo157[label ="y"]
+Nodo156->Nodo158;
+Nodo158[label ="z"]
+Nodo159[label="Expresion Verdadero"]
+Nodo154->Nodo159;
+Nodo159->Nodo160;
+Nodo160[label ="1"]
+Nodo161[label="Expresion False"]
+Nodo154->Nodo161;
+Nodo161->Nodo162;
+Nodo162[label ="0"]
+Nodo3->Nodo163;
+Nodo163[label ="Print"]
+Nodo163->Nodo164;
+Nodo164[label ="abc"]
+Nodo3->Nodo165;
+Nodo165[label ="Asignacion"]
+Nodo166[label ="Id: abc"]
+Nodo165->Nodo166;
+Nodo165->Nodo167;
+Nodo167[label="Ternario"]
+Nodo168[label="Condicion"]
+Nodo167->Nodo168;
+Nodo168->Nodo169;
+Nodo169[label ="<"]
+Nodo169->Nodo170;
+Nodo170[label ="z"]
+Nodo169->Nodo171;
+Nodo171[label ="y"]
+Nodo172[label="Expresion Verdadero"]
+Nodo167->Nodo172;
+Nodo172->Nodo173;
+Nodo173[label ="1"]
+Nodo174[label="Expresion False"]
+Nodo167->Nodo174;
+Nodo174->Nodo175;
+Nodo175[label ="0"]
+Nodo3->Nodo176;
+Nodo176[label ="Print"]
+Nodo176->Nodo177;
+Nodo177[label ="abc"]
+Nodo0->Nodo178;
+Nodo178[label ="Exec"]
+Nodo178->Nodo179;
+Nodo179[label ="Llamado"]
+Nodo180[label ="Id: funcionesEspecialesYNativas"]
+Nodo179->Nodo180;
 }

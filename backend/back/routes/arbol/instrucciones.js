@@ -294,6 +294,7 @@ const INSTRUCCION = {
     },
     nuevoTer: function (condicion, exp1, exp2){
         return {
+            tipo: TIPO_INSTRUCCION.TERNARIO,
             condicion: condicion,
             exp1: exp1,
             exp2: exp2

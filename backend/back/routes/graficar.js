@@ -530,7 +530,94 @@ function procesarexp(expresion, number){
         let valores = ejLlamado(expresion, number);
         number = valores[0];
         str += valores[1];
-    }else{
+    }
+    else if(expresion.tipo === tipoInstruccion.LOWER){
+        str += "Nodo" + number.toString() + "[label=\"ToLower\"]\n";
+        number += 1;
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        let lista = procesarexp(expresion.expresion, number);
+        number = lista[0];
+        str += lista[1];
+    }
+    else if(expresion.tipo === tipoInstruccion.UPPER){
+        str += "Nodo" + number.toString() + "[label=\"ToUpper\"]\n";
+        number += 1;
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        let lista = procesarexp(expresion.expresion, number);
+        number = lista[0];
+        str += lista[1];
+    }
+    else if(expresion.tipo === tipoInstruccion.LENG){
+        str += "Nodo" + number.toString() + "[label=\"Lenght\"]\n";
+        number += 1;
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        let lista = procesarexp(expresion.expresion, number);
+        number = lista[0];
+        str += lista[1];
+    }
+    else if(expresion.tipo === tipoInstruccion.TRUNC){
+        str += "Nodo" + number.toString() + "[label=\"Truncate\"]\n";
+        number += 1;
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        let lista = procesarexp(expresion.expresion, number);
+        number = lista[0];
+        str += lista[1];
+    }
+    else if(expresion.tipo === tipoInstruccion.INROUND){
+        str += "Nodo" + number.toString() + "[label=\"Round\"]\n";
+        number += 1;
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        let lista = procesarexp(expresion.expresion, number);
+        number = lista[0];
+        str += lista[1];
+    }
+    else if(expresion.tipo === tipoInstruccion.TYPE){
+        str += "Nodo" + number.toString() + "[label=\"TypeOf\"]\n";
+        number += 1;
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        let lista = procesarexp(expresion.expresion, number);
+        number = lista[0];
+        str += lista[1];
+    }
+    else if(expresion.tipo === tipoInstruccion.TOSTRING){
+        str += "Nodo" + number.toString() + "[label=\"ToString\"]\n";
+        number += 1;
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        let lista = procesarexp(expresion.expresion, number);
+        number = lista[0];
+        str += lista[1];
+    }
+    else if(expresion.tipo === tipoInstruccion.TERNARIO){
+        str += "Nodo" + number.toString() + "[label=\"Ternario\"]\n";
+        number += 1;
+        str += "Nodo" + number.toString() + "[label=\"Condicion\"]\n";
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        let pivote2 = number;
+        number += 1;
+        str += "Nodo" + pivote2.toString() + "->Nodo" + number.toString() + ";\n";
+        let lista = procesarexp(expresion.condicion, number);
+        number = lista[0];
+        str += lista[1];
+        number += 1;
+        str += "Nodo" + number.toString() + "[label=\"Expresion Verdadero\"]\n";
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        pivote2 = number;
+        number += 1;
+        str += "Nodo" + pivote2.toString() + "->Nodo" + number.toString() + ";\n";
+        lista = procesarexp(expresion.exp1, number);
+        number = lista[0];
+        str += lista[1];
+        number += 1;
+        str += "Nodo" + number.toString() + "[label=\"Expresion False\"]\n";
+        str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        pivote2 = number;
+        number += 1;
+        str += "Nodo" + pivote2.toString() + "->Nodo" + number.toString() + ";\n";
+        lista = procesarexp(expresion.exp2, number);
+        number = lista[0];
+        str += lista[1];
+    }
+    else{
         str += "Nodo" + pivote.toString() + "[label =\"" + procesarDato(expresion) + "\"]\n";
     }
     if(expresion.operandoIzq !== undefined){

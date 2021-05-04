@@ -79,7 +79,7 @@
 "toUpper"           return 'TOUPPER';
 "length"            return 'LENGTH';
 "truncate"          return 'TRUNCATE';
-"roud"              return 'ROUND';
+"round"              return 'ROUND';
 "typeOf"            return 'TYPEOF';
 "toString"          return 'TOSTR';
 "toCharArray"       return 'TOCHARRAY';
@@ -150,7 +150,8 @@ TIPO
 ;
 
 EXP
-    :EXP IGUALDAD EXP               { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.IGUALDAD, $1, $3); }
+    :EXP INTERR EXP DOSPUNTOS EXP   { $$ = instrucciones.nuevoTer($1, $3, $5); }
+    |EXP IGUALDAD EXP               { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.IGUALDAD, $1, $3); }
     |EXP DIFERENTE EXP              { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.DIFERENTE, $1, $3); }
     |EXP MENOR EXP                  { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MENOR, $1, $3); }
     |EXP MENORIGUAL EXP             { $$ = instrucciones.nuevaOperacionBinaria(tipoOperacion.MENORIGUAL, $1, $3); }
@@ -169,7 +170,6 @@ EXP
     |NOT EXP                        { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.NOT, $2); }
     |EXP SUMA2                      { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.ADICION, $1); }
     |EXP RESTA2                     { $$ = instrucciones.nuevaOperacionUnaria(tipoOperacion.SUSTRACCION, $1); }
-    |DEFTER                         { $$ = $1; }
     |CASTEO                         { $$ = $1; }
     |ENTERO                         { $$ = instrucciones.nuevoValor(tipoValor.ENTERO, Number($1)); }
     |DECIMAL                        { $$ = instrucciones.nuevoValor(tipoValor.DOUBLE, Number($1)); }
@@ -184,9 +184,6 @@ EXP
     |error     { errores.push(instrucciones.nuevoError("Sintactico" ,'Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column,this._$.first_line,this._$.first_column)); }
     ;
 
-DEFTER
-    :EXP INTERR EXP DOSPUNTOS EXP         { $$ = instrucciones.nuevoTer($1, $3, $5); }
-;
 
 INSTRUCCIONGLOBAL
      :INSTRUCCIONGLOBAL ELEMGLOBAL        { $1.push($2); $$ = $1; }
