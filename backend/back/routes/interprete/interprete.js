@@ -4,16 +4,19 @@ const tipoValor = require('../arbol/instrucciones').TIPO_VALOR;
 const tipoDato = require('../arbol/tablasimbolos').TIPO_DATO;
 const TablaS = require('../arbol/tablasimbolos').TablaS;
 const procesarexpresion = require('../interprete/expresion').procesarexpresion;
+const instruccionArbol = require('../arbol/instrucciones').INSTRUCCION;
 
 let salida = '';
 let metodos = [];
 let ambito = "global";
+let funcionActual = false;
 let tablaGeneral = new TablaS([]);
 let errores = [];
 function ejecutar(arbol, errors){
     errores = errors;
     salida = "";
     metodos = [];
+    funcionActual = false;
     let tslocal = new TablaS([]);
     let tablaGlobal = new TablaS([]);
     let main = [];
@@ -33,7 +36,12 @@ function ejecutar(arbol, errors){
                 let nuevoExpresiones = [];
                 let nuevoParametro = [];
                 llamada.expresiones.forEach((expresion) => {
-                    nuevoExpresiones[indice] = procesarexpresion(expresion, tablaGlobal, tslocal);
+                    let proc = procesarexpresion(expresion, tablaGlobal, tslocal);
+                    if(proc.tipo === tipoInstruccion.ERROR){
+                        errores.push(proc);
+                    }else{
+                        nuevoExpresiones[indice] = proc;
+                    }
                     nuevoParametro[indice] = metodoExec.parametros[indice];
                     indice += 1;
                 });
@@ -44,18 +52,21 @@ function ejecutar(arbol, errors){
                 //console.log(tablaGeneral);
             }else{
                 console.log("No vienen correcto el numero de parametros");
-                errores.push("Error semantico: El numero de parametros en la llamada no corresponde en Exec");
+                errores.push(instruccionArbol.nuevoError("Semantico","Error semantico: El numero de parametros en la llamada no corresponde en Exec", undefined, undefined));
+                //errores.push("Error semantico: El numero de parametros en la llamada no corresponde en Exec");
             }
         }else{
             console.log("no hay main");
-            errores.push("Error semantico: No se encontro ningun metodo con el id: " + llamada.id);
+            errores.push(instruccionArbol.nuevoError("Semantico","Error semantico: No se encontro ningun metodo con el id: " + llamada.id, undefined, undefined));
+            //errores.push("Error semantico: No se encontro ningun metodo con el id: " + llamada.id);
         }
     }else{
         console.log("mas de un main");
-        errores.push("Error semantico: Se econtro 0 o mas de 2 metodos Exec");
+        errores.push(instruccionArbol.nuevoError("Semantico","Error semantico: Se econtro 0 o mas de 2 metodos Exec", undefined, undefined));
+        //errores.push("Error semantico: Se econtro 0 o mas de 2 metodos Exec");
     }
     salida += construirError();
-    return [salida, tablaGeneral._simbolos];
+    return [salida, tablaGeneral._simbolos, construirErrores()];
 }
 
 function ejecutarbloqueglobal(instrucciones, tsglobal, tslocal, metodos, main){
@@ -78,7 +89,8 @@ function ejecutarbloqueglobal(instrucciones, tsglobal, tslocal, metodos, main){
 }
 
 function ejecutarbloquelocal(instrucciones, tsglobal, tslocal){
-    instrucciones.forEach((instruccion)=>{
+    let rtr = undefined;
+    instrucciones.every((instruccion)=>{
         //console.log(tslocal, tsglobal);
         //console.log(instruccion);
         if(instruccion.tipo === tipoInstruccion.DECLARACION){
@@ -90,30 +102,55 @@ function ejecutarbloquelocal(instrucciones, tsglobal, tslocal){
         else if(instruccion.tipo === tipoInstruccion.ASIGNACION){
             ejecutarAsignacion(instruccion, tsglobal,tslocal);
         }
+        else if(instruccion.tipo === tipoInstruccion.ADICION){
+            ejecutarAdicion(instruccion, tsglobal,tslocal);
+        }
+        else if(instruccion.tipo === tipoInstruccion.SUSTRACCION){
+            ejecutarSustraccion(instruccion, tsglobal,tslocal);
+        }
         else if(instruccion.tipo === tipoInstruccion.WHILE){
             let tslocal2 = new TablaS(tslocal._simbolos);
-            ejecutarwhile(instruccion, tsglobal, tslocal2);
+            rtr = ejecutarwhile(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.BLOQUEIF){
             let tslocal2 = new TablaS(tslocal._simbolos);
-            ejecutarif(instruccion, tsglobal, tslocal2);
+            rtr = ejecutarif(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.DOWHILE){
             let tslocal2 = new TablaS(tslocal._simbolos);
-            ejecutarDowhile(instruccion, tsglobal, tslocal2);
+            rtr = ejecutarDowhile(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.FOR){
             let tslocal2 = new TablaS(tslocal._simbolos);
-            ejecutarfor(instruccion, tsglobal, tslocal2);
+            rtr = ejecutarfor(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.SWTICH){
             let tslocal2 = new TablaS(tslocal._simbolos);
-            ejecutarSwitch(instruccion, tsglobal, tslocal2);
+            rtr = ejecutarSwitch(instruccion, tsglobal, tslocal2);
         }
         else if(instruccion.tipo === tipoInstruccion.LLAMADA){
             ejecutarLlamado(instruccion, tsglobal, tslocal);
         }
+        else if(instruccion.tipo === tipoInstruccion.BREAK){
+            rtr = tipoInstruccion.BREAK;
+        }
+        else if(instruccion.tipo === tipoInstruccion.CONTINUE){
+            rtr = tipoInstruccion.CONTINUE;
+        }
+        else if(instruccion.tipo === tipoInstruccion.RETURN){
+            if(instruccion.exp === undefined){
+                rtr = tipoInstruccion.BREAK;
+            }else{
+                rtr = procesarexpresion(instruccion.exp, tsglobal, tslocal);
+            }
+        }
+        if(rtr !== undefined){
+            return false;
+        }else{
+            return true;
+        }
     });
+    return rtr;
 }
 
 function ejecutardeclaracionglobal(instruccion, tsglobal, tslocal){
@@ -139,7 +176,11 @@ function ejecutardeclaracionglobal(instruccion, tsglobal, tslocal){
         }
     }else{
         let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
-        errores.push(tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor, instruccion.linea, instruccion.columna, ambito));
+        if(valor.tipo === tipoInstruccion.ERROR){
+            errores.push(valor);
+        }else{
+            errores.push(tsglobal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor, instruccion.linea, instruccion.columna, ambito));
+        }
         //console.log(tsglobal);
     }
     guardarVariables(tsglobal, instruccion.id);
@@ -148,7 +189,11 @@ function ejecutardeclaracionglobal(instruccion, tsglobal, tslocal){
 function ejecutarAsignacionglobal(instruccion, tsglobal, tslocal){
     //console.log(instruccion.expresion);
     let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
-    errores.push(tsglobal.modificar(instruccion.id, valor));
+    if(valor.tipo === tipoInstruccion.ERROR){
+        errores.push(valor);
+    }else{
+        errores.push(tsglobal.modificar(instruccion.id, valor));
+    }
 }
 
 function ejecutardeclaracion(instruccion, tsglobal, tslocal){
@@ -174,7 +219,11 @@ function ejecutardeclaracion(instruccion, tsglobal, tslocal){
         }
     }else{
         let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
-        errores.push(tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor, instruccion.linea, instruccion.columna, ambito));
+        if(valor.tipo === tipoInstruccion.ERROR){
+            errores.push(valor);
+        }else{
+            errores.push(tslocal.agregar(instruccion.tipo_dato1 ,instruccion.tipo_dato2 , instruccion.id , valor, instruccion.linea, instruccion.columna, ambito));
+        }
        //console.log(tsglobal);
     }
     guardarVariables(tslocal, instruccion.id);
@@ -184,87 +233,190 @@ function ejecutarAsignacion(instruccion, tsglobal, tslocal){
     console.log("spy asignacion");
     //console.log(instruccion.expresion);
     let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
-    if(tslocal !== undefined){
-        let valorr = tslocal.obtener(instruccion.id);
-        if(valorr){
-            errores.push(tslocal.modificar(instruccion.id, valor));
+    if(valor.tipo === tipoInstruccion.ERROR){
+        errores.push(valor);
+    }else{
+        if(tslocal !== undefined){
+            let valorr = tslocal.obtener(instruccion.id);
+            if(valorr){
+                errores.push(tslocal.modificar(instruccion.id, valor));
+            }
+            else{
+                errores.push(tsglobal.modificar(instruccion.id, valor));
+            }
         }
-        else{
+        else {
             errores.push(tsglobal.modificar(instruccion.id, valor));
         }
     }
+}
+
+function ejecutarAdicion(instruccion, tsglobal, tslocal){
+    console.log("soy adicion");
+    //console.log(instruccion.expresion);
+    if(tslocal !== undefined){
+        let valorr = tslocal.obtener(instruccion.id);
+        if(valorr){
+            errores.push(tslocal.adicion(instruccion.id));
+        }
+        else{
+            errores.push(tsglobal.adicion(instruccion.id));
+        }
+    }
     else {
-        errores.push(tsglobal.modificar(instruccion.id, valor));
+        errores.push(tsglobal.adicion(instruccion.id));
+    }
+}
+
+function ejecutarSustraccion(instruccion, tsglobal, tslocal){
+    console.log("soy sustraccion");
+    //console.log(instruccion.expresion);
+    if(tslocal !== undefined){
+        let valorr = tslocal.obtener(instruccion.id);
+        if(valorr){
+            errores.push(tslocal.sustraccion(instruccion.id));
+        }
+        else{
+            errores.push(tsglobal.sustraccion(instruccion.id));
+        }
+    }
+    else {
+        errores.push(tsglobal.sustraccion(instruccion.id));
     }
 }
 
 function ejecutarimprimir(instruccion, tsglobal, tslocal){
     console.log("soy impresion");
-    let valor = procesarexpresion(instruccion.expresion, tsglobal , tslocal);
-    //console.log(valor);
-    salida += valor.valor +'\n';
+    let valor = procesarexpresion(instruccion.expresion, tsglobal ,tslocal);
+    if(valor.tipo === tipoInstruccion.ERROR){
+        errores.push(valor);
+    }else {
+        //console.log(valor);
+        salida += valor.valor + '\n';
+    }
 }
 
 function ejecutarwhile(instruccion, tsglobal, tslocal){
     ambito = "While";
     console.log("soy while");
     //console.log(instruccion.condicion);
+    let rtr = undefined;
     let valor = procesarexpresion(instruccion.condicion, tsglobal ,tslocal);
-    while (valor.valor){
-        ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
-        valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
+    if(valor.tipo === tipoInstruccion.ERROR){
+        errores.push(valor);
+    }else {
+        while (valor.valor) {
+            rtr = ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
+            if(rtr === undefined || rtr === tipoInstruccion.CONTINUE){
+                valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
+            }else if(rtr === tipoInstruccion.BREAK){
+                rtr = undefined;
+                valor.valor = false;
+            }else{
+                if(funcionActual === false){
+                    errores.push(instruccionArbol.nuevoError("Semantico","Error semantico: Return con expresion fuera de una funcion", undefined, undefined));
+                }else{
+                    valor.valor = false;
+                }
+            }
+        }
     }
+    return rtr;
 }
 
 function ejecutarif(instruccion1, tsglobal, tslocal){
     ambito = "If";
     console.log("soy un if");
     let instrucciones = instruccion1.instrucciones;
+    let rtr = undefined;
     instrucciones.every((instruccion)=>{
         if (instruccion.tipo === tipoInstruccion.IF){
             console.log("soy un if o if else");
-            let valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
-            if (valor.valor) {
-                ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
-                return false;
-            }else{
+            let valor = procesarexpresion(instruccion.condicion, tsglobal ,tslocal);
+            if(valor.tipo === tipoInstruccion.ERROR){
+                errores.push(valor);
                 return true;
+            }else {
+                if (valor.valor) {
+                    rtr = ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
+                    return false;
+                } else {
+                    return true;
+                }
             }
         }else if (instruccion.tipo === tipoInstruccion.ELSE){
             console.log("soy un else");
-            ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
+            rtr = ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
             return false;
         }
     });
+    return rtr;
 }
 
 function ejecutarDowhile(instruccion, tsglobal, tslocal){
     ambito = "Do-while";
     console.log("soy do while");
+    let rtr = undefined;
     //console.log(instruccion.condicion);
     let valor = procesarexpresion(instruccion.condicion, tsglobal ,tslocal);
-    do{
-        ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
-        valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
-    }while (valor.valor);
+    if(valor.tipo === tipoInstruccion.ERROR){
+        errores.push(valor);
+    }else {
+        do {
+            rtr = ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
+            if(rtr === undefined || rtr === tipoInstruccion.CONTINUE){
+                valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
+            }else if(rtr === tipoInstruccion.BREAK){
+                rtr = undefined;
+                valor.valor = false;
+            }else{
+                if(funcionActual === false){
+                    errores.push(instruccionArbol.nuevoError("Semantico","Error semantico: Return con expresion fuera de una funcion", undefined, undefined));
+                }else{
+                    valor.valor = false;
+                }
+            }
+        } while (valor.valor);
+    }
+    return rtr;
 }
 
 function ejecutarfor(instruccion, tsglobal, tslocal){
     ambito = "for";
     console.log("soy for");
+    let rtr = undefined;
     let asig = [instruccion.asignacion1];
     ejecutarbloquelocal(asig, tsglobal, tslocal);
     let valor = procesarexpresion(instruccion.condicion, tsglobal ,tslocal);
-    while (valor.valor){
-        ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
-        ejecutarAsignacion(instruccion.asignacion2, tsglobal, tslocal);
-        valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
+    if(valor.tipo === tipoInstruccion.ERROR){
+        errores.push(valor);
+    }else {
+        while (valor.valor) {
+            rtr = ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
+            ejecutarbloquelocal([instruccion.asignacion2], tsglobal, tslocal);
+            //ejecutarAsignacion(instruccion.asignacion2, tsglobal, tslocal);
+            valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
+            if(rtr === undefined || rtr === tipoInstruccion.CONTINUE){
+                valor = procesarexpresion(instruccion.condicion, tsglobal, tslocal);
+            }else if(rtr === tipoInstruccion.BREAK){
+                rtr = undefined;
+                valor.valor = false;
+            }else{
+                if(funcionActual === false){
+                    errores.push(instruccionArbol.nuevoError("Semantico","Error semantico: Return con expresion fuera de una funcion", undefined, undefined));
+                }else{
+                    valor.valor = false;
+                }
+            }
+        }
     }
+    return rtr;
 }
 
 function ejecutarSwitch(instruccion1, tsglobal, tslocal){
     ambito = "Switch";
     console.log("soy un switch");
+    let rtr = undefined;
     let instrucciones = instruccion1.instrucciones;
     let condicionGeneral = instruccion1.condicion;
     instrucciones.every((instruccion)=>{
@@ -276,12 +428,28 @@ function ejecutarSwitch(instruccion1, tsglobal, tslocal){
                 operandoDer: instruccion.condicion
             };
             //console.log(expresion);
-            let valor = procesarexpresion(expresion, tsglobal, tslocal);
-            if (valor.valor) {
-                ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
-                return false;
-            }else{
+            let valor = procesarexpresion(expresion, tsglobal ,tslocal);
+            if(valor.tipo === tipoInstruccion.ERROR){
+                errores.push(valor);
                 return true;
+            }else {
+                if (valor.valor) {
+                    rtr = ejecutarbloquelocal(instruccion.instrucciones, tsglobal, tslocal);
+                    if(rtr === undefined || rtr === tipoInstruccion.CONTINUE){
+                        return true;
+                    }else if(rtr === tipoInstruccion.BREAK){
+                        rtr = undefined;
+                        return false;
+                    }else{
+                        if(funcionActual === false){
+                            errores.push(instruccionArbol.nuevoError("Semantico","Error semantico: Return con expresion fuera de una funcion", undefined, undefined));
+                        }else{
+                            return false;
+                        }
+                    }
+                } else {
+                    return true;
+                }
             }
         }else if (instruccion.tipo === tipoInstruccion.DEFAULT){
             console.log("soy un default");
@@ -289,6 +457,7 @@ function ejecutarSwitch(instruccion1, tsglobal, tslocal){
             return false;
         }
     });
+    return rtr;
 }
 
 function ejecutarLlamado(instruccion, tsglobal, tslocal){
@@ -302,7 +471,12 @@ function ejecutarLlamado(instruccion, tsglobal, tslocal){
             let nuevoExpresiones = [];
             let nuevoParametro = [];
             instruccion.expresiones.forEach((expresion) => {
-                nuevoExpresiones[indice] = procesarexpresion(expresion, tsglobal, tslocal);
+                let proc = procesarexpresion(expresion, tsglobal, tslocal);
+                if(proc.tipo === tipoInstruccion.ERROR){
+                    errores.push(proc);
+                }else{
+                    nuevoExpresiones[indice] = proc;
+                }
                 nuevoParametro[indice] = metodo.parametros[indice];
                 indice += 1;
             });
@@ -314,11 +488,13 @@ function ejecutarLlamado(instruccion, tsglobal, tslocal){
             ejecutarbloquelocal(metodo.instrucciones, tsglobal, tslocal2, instruccion.linea, instruccion.columna, ambito);
         }else{
             console.log("No vienen correcto el numero de parametros");
-            errores.push("Error semantico: El numero de parametros en la llamada no corresponde en " + metodo.id);
+            errores.push(instruccionArbol.nuevoError("Semantico","Error semantico: El numero de parametros en la llamada no corresponde en " + metodo.id, undefined, undefined));
+            //errores.push("Error semantico: El numero de parametros en la llamada no corresponde en " + metodo.id);
         }
     }else{
         console.log("no existe este metodo");
-        errores.push("Error semantico: El metodo " + instruccion.id + " No existe");
+        errores.push(instruccionArbol.nuevoError("Semantico","Error semantico: El metodo " + instruccion.id + " No existe", undefined, undefined));
+        //errores.push("Error semantico: El metodo " + instruccion.id + " No existe");
     }
 }
 
@@ -340,7 +516,18 @@ function construirError(){
     console.log(errores);
     errores.forEach((error) => {
         if(error !== undefined){
-            str += error + "\n";
+            str += error.descripcion + "\n";
+        }
+    });
+    return str;
+}
+
+function construirErrores(){
+    let str = [];
+    console.log(errores);
+    errores.forEach((error) => {
+        if(error !== undefined){
+            str.push(error);
         }
     });
     return str;

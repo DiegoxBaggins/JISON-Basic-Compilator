@@ -106,7 +106,7 @@
 
 <<EOF>>                 return 'EOF';
 
-.                       { errores.push('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
+.                       { errores.push(instrucciones.nuevoError("Lexico", 'Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column,yylloc.first_line,yylloc.first_column)); }
 /lex
 
 %{//importar de otras clases
@@ -181,6 +181,7 @@ EXP
     |INSTRETUR                      { $$ = $1; }
     |IDENTIFICADOR CORIZQ EXP CORDER                    { $$ = instrucciones.nuevoValor(tipoValor.IDENTIFICADOR, $1); }
     |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER      { $$ = instrucciones.nuevoValor(tipoValor.IDENTIFICADOR, $1); }
+    |error     { errores.push(instrucciones.nuevoError("Sintactico" ,'Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column,this._$.first_line,this._$.first_column)); }
     ;
 
 DEFTER
@@ -194,12 +195,12 @@ INSTRUCCIONGLOBAL
 
 ELEMGLOBAL
      :DECLARACION                   { $$ = $1; }
-     |ASIGNACION                    { $$ = $1; }
+     |ASIGNACION PTCOMA             { $$ = $1; }
      |LISTAGREGAR                   { $$ = $1; }
      |METODO                        { $$ = $1; }
      |FUNCION                       { $$ = $1; }
      |EXEC LLAMADA PTCOMA           { $$ = instrucciones.nuevoExc($2); }
-     |error     { errores.push('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+     |error     { errores.push(instrucciones.nuevoError("Sintactico" ,'Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column,this._$.first_line,this._$.first_column)); }
 ;
 
 INSTRUCCIONES
@@ -209,21 +210,20 @@ INSTRUCCIONES
 
 ELEMINST
      :DECLARACION                   { $$ = $1; }
-     |ASIGNACION                    { $$ = $1; }
-     |DEFTER PTCOMA                 { $$ = $1; }
+     |ASIGNACION PTCOMA             { $$ = $1; }
      |DEFIF                         { $$ = instrucciones.nuevoBloqueIf($1); }
      |DEFSWITCH                     { $$ = $1; }
      |DEFWHILE                      { $$ = $1; }
      |DEFFOR                        { $$ = $1; }
      |DEFDOWHILE                    { $$ = $1; }
-     |BREAK PTCOMA                  { $$ = $1; }
-     |CONTINUE PTCOMA               { $$ = $1; }
-     |RETURN PTCOMA                 { $$ = $1; }
-     |RETURN EXP PTCOMA             { $$ = $1; }
+     |BREAK PTCOMA                  { $$ = instrucciones.nuevoBreak(); }
+     |CONTINUE PTCOMA               { $$ = instrucciones.nuevoContinue(); }
+     |RETURN PTCOMA                 { $$ = instrucciones.nuevoReturn(undefined); }
+     |RETURN EXP PTCOMA             { $$ = instrucciones.nuevoReturn($2); }
      |IMPRIMIR                      { $$ = $1; }
      |LISTAGREGAR                   { $$ = $1; }
      |LLAMADA PTCOMA                { $$ = $1; }
-     |error     { errores.push('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+     |error     { errores.push(instrucciones.nuevoError("Sintactico" ,'Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column,this._$.first_line,this._$.first_column)); }
 ;
 
 CASTEO
@@ -238,9 +238,11 @@ DECLARACION
 ;
 
 ASIGNACION
-    :IDENTIFICADOR IGUAL EXP PTCOMA                                     { $$ = instrucciones.nuevaAsignacion($1, $3); }
-    |IDENTIFICADOR CORIZQ EXP CORDER IGUAL EXP PTCOMA
-    |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER IGUAL EXP PTCOMA
+    :IDENTIFICADOR IGUAL EXP                                            { $$ = instrucciones.nuevaAsignacion($1, $3); }
+    |IDENTIFICADOR SUMA2                                                { $$ = instrucciones.nuevaAdicion($1); }
+    |IDENTIFICADOR RESTA2                                               { $$ = instrucciones.nuevaSustraccion($1); }
+    |IDENTIFICADOR CORIZQ EXP CORDER IGUAL EXP
+    |IDENTIFICADOR CORIZQ CORIZQ EXP CORDER CORDER IGUAL EXP
 ;
 
 VECTORES
@@ -288,8 +290,8 @@ DEFWHILE
 ;
 
 DEFFOR
-    :FOR PARIZQ DECLARACION EXP PTCOMA IDENTIFICADOR IGUAL EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER     { $$ = instrucciones.nuevoFor($3, $4, instrucciones.nuevaAsignacion($6, $8), $11); }
-    |FOR PARIZQ ASIGNACION EXP PTCOMA IDENTIFICADOR IGUAL EXP PARDER LLAVIZQ INSTRUCCIONES LLAVDER      { $$ = instrucciones.nuevoFor($3, $4, instrucciones.nuevaAsignacion($6, $8), $11); }
+    :FOR PARIZQ DECLARACION EXP PTCOMA ASIGNACION PARDER LLAVIZQ INSTRUCCIONES LLAVDER     { $$ = instrucciones.nuevoFor($3, $4, $6, $9); }
+    |FOR PARIZQ ASIGNACION PTCOMA EXP PTCOMA ASIGNACION PARDER LLAVIZQ INSTRUCCIONES LLAVDER      { $$ = instrucciones.nuevoFor($3, $5, $7, $10); }
 ;
 
 DEFDOWHILE

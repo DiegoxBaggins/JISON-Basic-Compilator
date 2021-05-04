@@ -53,6 +53,18 @@ function ejecutarbloque(instrucciones, number){
             number = arreglo[0];
             str += arreglo[1];
         }
+        else if(instruccion.tipo === tipoInstruccion.ADICION){
+            str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+            let arreglo = ejAdicion(instruccion, number);
+            number = arreglo[0];
+            str += arreglo[1];
+        }
+        else if(instruccion.tipo === tipoInstruccion.SUSTRACCION){
+            str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+            let arreglo = ejSustraccion(instruccion, number);
+            number = arreglo[0];
+            str += arreglo[1];
+        }
         else if(instruccion.tipo === tipoInstruccion.WHILE){
             str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
             let arreglo = ejwhile(instruccion, number);
@@ -100,6 +112,28 @@ function ejecutarbloque(instrucciones, number){
             let arreglo = ejMetodo(instruccion, number);
             number = arreglo[0];
             str += arreglo[1];
+        }
+        else if(instruccion.tipo === tipoInstruccion.BREAK){
+            str += "Nodo" + number.toString() + "[label=\"Return\"]\n";
+            str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        }
+        else if(instruccion.tipo === tipoInstruccion.CONTINUE){
+            str += "Nodo" + number.toString() + "[label=\"Break\"]\n";
+            str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+        }
+        else if(instruccion.tipo === tipoInstruccion.RETURN){
+            if(instruccion.exp === undefined){
+                str += "Nodo" + number.toString() + "[label=\"Return\"]\n";
+                str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+            }else{
+                str += "Nodo" + number.toString() + "[label=\"Return\"]\n";
+                str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+                number += 1;
+                str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+                let lista = procesarexp(instruccion.exp);
+                number = lista[0];
+                str += lista[1];
+            }
         }
     });
     return [number, str];
@@ -172,6 +206,26 @@ function ejasignacion(instruccion, number){
     let arreglo = procesarexp(instruccion.expresion, number);
     number = arreglo[0];
     str += arreglo[1];
+    return [number, str];
+}
+
+function ejAdicion(instruccion, number){
+    let str = "";
+    let pivote = number;
+    str += "Nodo" + number.toString() + "[label =\"Adicion\"]\n";
+    number += 1;
+    str += "Nodo" + number.toString() + "[label =\"Id: " + instruccion.id + " ++\"]\n";
+    str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
+    return [number, str];
+}
+
+function ejSustraccion(instruccion, number){
+    let str = "";
+    let pivote = number;
+    str += "Nodo" + number.toString() + "[label =\"Sustraccion\"]\n";
+    number += 1;
+    str += "Nodo" + number.toString() + "[label =\"Id: " + instruccion.id + "--\"]\n";
+    str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
     return [number, str];
 }
 
@@ -294,7 +348,13 @@ function ejfor(instruccion, number){
     str += arreglo[1];
     number += 1;
     str += "Nodo" + pivote.toString() + "->Nodo" + number.toString() + ";\n";
-    arreglo = ejasignacion(instruccion.asignacion2, number);
+    if(instruccion.asignacion2.tipo === tipoInstruccion.ASIGNACION){
+        arreglo = ejasignacion(instruccion.asignacion2, number);
+    }else if(instruccion.asignacion2.tipo === tipoInstruccion.ADICION){
+        arreglo = ejAdicion(instruccion.asignacion2, number);
+    } else if(instruccion.asignacion2.tipo === tipoInstruccion.SUSTRACCION){
+        arreglo = ejSustraccion(instruccion.asignacion2, number);
+    }
     number = arreglo[0];
     str += arreglo[1];
     number += 1;

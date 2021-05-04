@@ -13,7 +13,8 @@ class Base extends Component{
             text1: 'Programa aqui',
             text2: 'Resultado',
             variables: [],
-            imagenArbol: null
+            imagenArbol: null,
+            errores: []
         };
 
         this.handleChange1 = this.handleChange1.bind(this);
@@ -48,7 +49,7 @@ class Base extends Component{
         });
     };
 
-    compilar = () => {
+    compilar = async() => {
         this.setState({
             imagenArbol: null,
             variables: []
@@ -56,15 +57,20 @@ class Base extends Component{
         let texto = {
             text: this.state.text1
         }
-        axios.post(`${Server}/compilador/texto`, texto).then( (response) =>{
+        await axios.post(`${Server}/compilador/texto`, texto).then( (response) =>{
             this.setState({
                 text2: response.data
             })
         });
+        await axios.get(`${Server}/compilador/tablaErrores`).then( (response) =>{
+            this.setState({
+                errores: response.data
+            })
+        });
     }
 
-    getTablaVariables = () => {
-        axios.get(`${Server}/compilador/tablaVariables`).then( (response) =>{
+    getTablaVariables = async() => {
+        await axios.get(`${Server}/compilador/tablaVariables`).then( (response) =>{
             this.setState({
                 variables: response.data
             })
@@ -108,14 +114,37 @@ class Base extends Component{
                 </div>
                 <div className="div-medio">
                     <input type="button" value="Compilar"  onClick={this.compilar} className="btn-upload"/>
-                    <input type="button" value="Reporte AST" onClick={this.mostrarImagen} className="btn-upload"/>
                     <input type="button" value="Tabla de Variables" onClick={this.getTablaVariables} className="btn-upload"/>
+                    <input type="button" value="Reporte AST" onClick={this.mostrarImagen} className="btn-upload"/>
                 </div>
                 <div className="div-txt">
                     <label htmlFor="txt2">Salida:</label>
                     <textarea id="txt2" value={this.state.text2} onChange={this.handleChange2} className="txtArea" readOnly/>
                 </div>
                 <div className="clearfix"> </div>
+                <div className="div-table">
+                    <table className="default">
+                        <caption>Tabla de Errores</caption>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Descripcion</th>
+                            <th>Linea</th>
+                            <th>Columna</th>
+                        </tr>
+                        {this.state.errores[0] &&
+                        this.state.errores.map((error, i) => {
+                            return (
+                                <tr>
+                                    <td>{error.tipoError}</td>
+                                    <td>{error.descripcion}</td>
+                                    <td>{error.linea}</td>
+                                    <td>{error.columna}</td>
+                                </tr>
+                            )
+                        })
+                        }
+                    </table>
+                </div>
                 <div className="div-table">
                     <table className="default">
                         <caption>Tabla de Variables</caption>

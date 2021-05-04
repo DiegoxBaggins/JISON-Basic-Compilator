@@ -66,7 +66,7 @@ Nodo28->Nodo31;
 Nodo31->Nodo32;
 Nodo32[label ="Print"]
 Nodo32->Nodo33;
-Nodo33[label ="Hoy es\n lunes"]
+Nodo33[label ="Hoy es lunes"]
 Nodo34[label ="Case"]
 Nodo25->Nodo34;
 Nodo35[label ="Condicion"]
@@ -78,7 +78,7 @@ Nodo34->Nodo37;
 Nodo37->Nodo38;
 Nodo38[label ="Print"]
 Nodo38->Nodo39;
-Nodo39[label ="\tHoy es martes"]
+Nodo39[label ="Hoy es martes"]
 Nodo40[label ="Case"]
 Nodo25->Nodo40;
 Nodo41[label ="Condicion"]
@@ -90,7 +90,7 @@ Nodo40->Nodo43;
 Nodo43->Nodo44;
 Nodo44[label ="Print"]
 Nodo44->Nodo45;
-Nodo45[label ="\'Hoy es miercoles"]
+Nodo45[label ="Hoy es miercoles"]
 Nodo46[label ="Case"]
 Nodo25->Nodo46;
 Nodo47[label ="Condicion"]
@@ -102,59 +102,80 @@ Nodo46->Nodo49;
 Nodo49->Nodo50;
 Nodo50[label ="Print"]
 Nodo50->Nodo51;
-Nodo51[label ="\\Hoy es jueves"]
-Nodo52[label ="Case"]
-Nodo25->Nodo52;
-Nodo53[label ="Condicion"]
-Nodo52->Nodo53;
+Nodo51[label ="Hoy es jueves"]
+Nodo52[label="Return"]
+Nodo49->Nodo52;
+Nodo53[label ="Case"]
+Nodo25->Nodo53;
+Nodo54[label ="Condicion"]
 Nodo53->Nodo54;
-Nodo54[label ="5"]
-Nodo55[label ="Instrucciones"]
-Nodo52->Nodo55;
-Nodo55->Nodo56;
-Nodo56[label ="Print"]
+Nodo54->Nodo55;
+Nodo55[label ="5"]
+Nodo56[label ="Instrucciones"]
+Nodo53->Nodo56;
 Nodo56->Nodo57;
-Nodo57[label ="\"Hoy es viernes\""]
-Nodo58[label ="Case"]
-Nodo25->Nodo58;
-Nodo59[label ="Condicion"]
-Nodo58->Nodo59;
+Nodo57[label ="Print"]
+Nodo57->Nodo58;
+Nodo58[label ="Hoy es viernes"]
+Nodo59[label ="Case"]
+Nodo25->Nodo59;
+Nodo60[label ="Condicion"]
 Nodo59->Nodo60;
-Nodo60[label ="6"]
-Nodo61[label ="Instrucciones"]
-Nodo58->Nodo61;
-Nodo61->Nodo62;
-Nodo62[label ="Print"]
+Nodo60->Nodo61;
+Nodo61[label ="6"]
+Nodo62[label ="Instrucciones"]
+Nodo59->Nodo62;
 Nodo62->Nodo63;
-Nodo63[label ="Hoy es sabado"]
-Nodo64[label ="Case"]
-Nodo25->Nodo64;
-Nodo65[label ="Condicion"]
-Nodo64->Nodo65;
+Nodo63[label ="Print"]
+Nodo63->Nodo64;
+Nodo64[label ="Hoy es sabado"]
+Nodo65[label ="Case"]
+Nodo25->Nodo65;
+Nodo66[label ="Condicion"]
 Nodo65->Nodo66;
-Nodo66[label ="7"]
-Nodo67[label ="Instrucciones"]
-Nodo64->Nodo67;
-Nodo67->Nodo68;
-Nodo68[label ="Print"]
+Nodo66->Nodo67;
+Nodo67[label ="7"]
+Nodo68[label ="Instrucciones"]
+Nodo65->Nodo68;
 Nodo68->Nodo69;
-Nodo69[label ="Hoy es domingo"]
-Nodo70[label ="Default"]
-Nodo25->Nodo70;
-Nodo71[label ="Instrucciones"]
-Nodo70->Nodo71;
+Nodo69[label ="Print"]
+Nodo69->Nodo70;
+Nodo70[label ="Hoy es domingo"]
+Nodo71[label ="Default"]
+Nodo25->Nodo71;
+Nodo72[label ="Instrucciones"]
 Nodo71->Nodo72;
-Nodo72[label ="Print"]
 Nodo72->Nodo73;
-Nodo73[label ="saber que dia es hoy"]
-Nodo0->Nodo74;
-Nodo74[label ="Exec"]
-Nodo74->Nodo75;
-Nodo75[label ="Llamado"]
-Nodo76[label ="Id: metodo1"]
+Nodo73[label ="Print"]
+Nodo73->Nodo74;
+Nodo74[label ="saber que dia es hoy"]
+Nodo24->Nodo75;
+Nodo75[label ="Bloque If"]
+Nodo76[label ="If/ If-Else"]
 Nodo75->Nodo76;
-Nodo77[label ="Parametros"]
-Nodo75->Nodo77;
+Nodo77[label ="Condicion"]Nodo76->Nodo77;
 Nodo77->Nodo78;
-Nodo78[label ="15"]
+Nodo78[label =">"]
+Nodo78->Nodo79;
+Nodo79[label ="dia"]
+Nodo78->Nodo80;
+Nodo80[label ="5"]
+Nodo81[label ="Instrucciones"]
+Nodo76->Nodo81;
+Nodo82[label="Break"]
+Nodo81->Nodo82;
+Nodo24->Nodo83;
+Nodo83[label ="Print"]
+Nodo83->Nodo84;
+Nodo84[label ="Antes del break"]
+Nodo0->Nodo85;
+Nodo85[label ="Exec"]
+Nodo85->Nodo86;
+Nodo86[label ="Llamado"]
+Nodo87[label ="Id: metodo1"]
+Nodo86->Nodo87;
+Nodo88[label ="Parametros"]
+Nodo86->Nodo88;
+Nodo88->Nodo89;
+Nodo89[label ="2"]
 }

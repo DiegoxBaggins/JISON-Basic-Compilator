@@ -38,6 +38,8 @@ const TIPO_INSTRUCCION = {
     IF:                 'INSTR_IF',
     ELSE:               'INSTR_ELSE',
     ASIGNACION:         'INSTR_ASIGNACION',
+    ADICION:            'INSTR_ADICION',
+    SUSTRACCION:        'INSTR_SUSTRACCION',
     DOWHILE:            'INSTR_DOWHILE',
     FOR:                'INSTR_FOR',
     SWTICH:             'INSTR_SWITCH',
@@ -48,8 +50,11 @@ const TIPO_INSTRUCCION = {
     EXEC:               'INSTR_EXEC',
     LLAMADA:            'INSTR_LLAMADA',
     BREAK:              'INSTR_BREAK',
+    CONTINUE:           'INSTR_CONTINUE',
     TERNARIO:           'INSTR_TERNARIO',
-    EXC:                'INSTR_EXC'
+    EXC:                'INSTR_EXC',
+    ERROR:              'INSTR_ERROR',
+    RETURN:             'INSTR_RETURN'
 }
 
 const INSTRUCCION = {
@@ -89,6 +94,18 @@ const INSTRUCCION = {
             tipo: TIPO_INSTRUCCION.ASIGNACION,
             id: id,
             expresion: expresion
+        }
+    },
+    nuevaAdicion: function (id){
+        return {
+            tipo: TIPO_INSTRUCCION.ADICION,
+            id: id
+        }
+    },
+    nuevaSustraccion: function (id){
+        return {
+            tipo: TIPO_INSTRUCCION.SUSTRACCION,
+            id: id
         }
     },
     nuevoImprimir: function (expresion){
@@ -188,6 +205,31 @@ const INSTRUCCION = {
         return {
             tipo: TIPO_INSTRUCCION.EXC,
             metodo: llamada
+        }
+    },
+    nuevoBreak: function (){
+        return {
+            tipo: TIPO_INSTRUCCION.BREAK,
+        }
+    },
+    nuevoContinue: function (){
+        return {
+            tipo: TIPO_INSTRUCCION.CONTINUE,
+        }
+    },
+    nuevoReturn: function (exp){
+        return {
+            tipo: TIPO_INSTRUCCION.RETURN,
+            exp: exp
+        }
+    },
+    nuevoError: function (tipo, descripcion, linea, columna){
+        return {
+            tipo: TIPO_INSTRUCCION.ERROR,
+            tipoError: tipo,
+            descripcion: descripcion,
+            linea: linea,
+            columna: columna
         }
     }
 }

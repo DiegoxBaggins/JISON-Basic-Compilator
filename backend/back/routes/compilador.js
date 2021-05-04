@@ -6,6 +6,7 @@ const graficarArbol = require('./graficar').graficarArbol;
 const imageToBase64 = require('image-to-base64');
 
 let tablaGeneral = [];
+let tablaErrores = [];
 /* GET users listing. */
 
 router.post('/archivo', function(req, res, next){
@@ -16,6 +17,7 @@ router.post('/archivo', function(req, res, next){
 router.post('/texto', function(req, res, next) {
     try {
         tablaGeneral = [];
+        tablaErrores = [];
         let valor = req.body.text;
         console.log(valor);
         let arbol = parser.parse(valor);
@@ -23,6 +25,8 @@ router.post('/texto', function(req, res, next) {
         let lista = interprete.ejecutar(arbol[0], arbol[1]);
         let salida = lista[0];
         tablaGeneral = lista[1];
+        tablaErrores = lista[2];
+        console.log(tablaErrores);
         graficarArbol(arbol[0]);
         res.send(salida);
     }
@@ -34,6 +38,15 @@ router.post('/texto', function(req, res, next) {
 router.get('/tablaVariables', function(req, res, next) {
     try {
         res.send(tablaGeneral);
+    }
+    catch (e){
+        console.log(e)
+    }
+});
+
+router.get('/tablaErrores', function(req, res, next) {
+    try {
+        res.send(tablaErrores);
     }
     catch (e){
         console.log(e)

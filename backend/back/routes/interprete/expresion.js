@@ -3,6 +3,7 @@ const tipoOperacion = require('../arbol/instrucciones').TIPO_OPERACION;
 const tipoValor = require('../arbol/instrucciones').TIPO_VALOR;
 const tipoDato = require('../arbol/tablasimbolos').TIPO_DATO;
 const TablaS = require('../arbol/tablasimbolos').TablaS;
+const instruccion = require('../arbol/instrucciones').INSTRUCCION;
 
 
 function procesarexpresion(expresion, tsglobal, tslocal){
@@ -31,7 +32,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden sumar los tipos" + valorIzq.tipo + " y " + valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.DOUBLE){
@@ -56,7 +57,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden sumar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.BOOL){
@@ -79,7 +80,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden sumar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.CHAR){
@@ -97,7 +98,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden sumar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.STRING){
@@ -118,12 +119,12 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden sumar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
             }
         }
         else {
             console.log('Error semantico los tipos no se pueden sumar');
-            return undefined;
+            return instruccion.nuevoError("Semantico","Error semantico: No se pueden sumar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.RESTA){
@@ -148,7 +149,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden restar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.DOUBLE){
@@ -170,7 +171,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden restar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.BOOL){
@@ -190,7 +191,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden restar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.CHAR){
@@ -202,12 +203,12 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden restar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
             }
         }
         else {
             console.log('Error semantico los tipos no se pueden sumar');
-            return undefined;
+            return instruccion.nuevoError("Semantico","Error semantico: No se pueden restar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.MULTIPLICACION){
@@ -225,7 +226,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden multiplicar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.DOUBLE){
@@ -240,7 +241,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden multiplicar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.CHAR){
@@ -252,48 +253,59 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden multiplicar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
             }
         }
         else {
             console.log('Error semantico los tipos no se pueden sumar');
-            return undefined;
+            return instruccion.nuevoError("Semantico","Error semantico: No se pueden multiplicar los tipos" + valorIzq.tipo + " y " +valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.DIVISION){
         let valorIzq = procesarexpresion(expresion.operandoIzq, tsglobal, tslocal);
         let valorDer = procesarexpresion(expresion.operandoDer, tsglobal, tslocal);
-        if(valorDer.valor === 0){
-            console.log('No se puede dividir dentro de 0');
-            return undefined;
-        }
-        else if(valorIzq.tipo === tipoDato.ENTERO || valorIzq.tipo === tipoDato.DOUBLE){
+        if(valorIzq.tipo === tipoDato.ENTERO || valorIzq.tipo === tipoDato.DOUBLE){
             if(valorDer.tipo === tipoDato.ENTERO || valorDer.tipo === tipoDato.DOUBLE){
-                return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor / valorDer.valor };
+                if(valorDer.valor === 0){
+                    console.log('No se puede dividir dentro de 0');
+                    return instruccion.nuevoError("Semantico","Error semantico: No se pueden dividir dentro de 0", undefined, undefined);
+                }else{
+                    return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor / valorDer.valor };
+                }
             }
             else if(valorDer.tipo === tipoDato.CHAR){
                 return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor / valorDer.valor.charCodeAt(0) };
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden dividir los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.CHAR){
             if(valorDer.tipo === tipoDato.ENTERO){
-                return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor.charCodeAt(0) / valorDer.valor };
+                if(valorDer.valor === 0){
+                    console.log('No se puede dividir dentro de 0');
+                    return instruccion.nuevoError("Semantico","Error semantico: No se pueden dividir dentro de 0", undefined, undefined);
+                }else{
+                    return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor.charCodeAt(0) / valorDer.valor };
+                }               
             }
             else if(valorDer.tipo === tipoDato.DOUBLE){
-                return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor.charCodeAt(0) / valorDer.valor };
+                if(valorDer.valor === 0){
+                    console.log('No se puede dividir dentro de 0');
+                    return instruccion.nuevoError("Semantico","Error semantico: No se pueden dividir dentro de 0", undefined, undefined);
+                }else{
+                    return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor.charCodeAt(0) / valorDer.valor };
+                }                
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden dividir los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
             }
         }
         else {
             console.log('Error semantico los tipos no se pueden sumar');
-            return undefined;
+            return instruccion.nuevoError("Semantico","Error semantico: No se pueden dividir los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.POTENCIA){
@@ -308,7 +320,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden potenciar los tipos" + valorIzq.tipo + " a "+ valorDer.tipo, undefined, undefined);
             }
         }
         else if(valorIzq.tipo === tipoDato.DOUBLE){
@@ -320,12 +332,12 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden potenciar los tipos" + valorIzq.tipo + " a "+ valorDer.tipo, undefined, undefined);
             }
         }
         else {
             console.log('Error semantico los tipos no se pueden sumar');
-            return undefined;
+            return instruccion.nuevoError("Semantico","Error semantico: No se pueden potenciar los tipos" + valorIzq.tipo + " a "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.MODULO){
@@ -337,12 +349,12 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             }
             else{
                 console.log('Error semantico no se pueden sumar');
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden modular los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
             }
         }
         else {
             console.log('Error semantico los tipos no se pueden sumar');
-            return undefined;
+            return instruccion.nuevoError("Semantico","Error semantico: No se pueden modular los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.NEGATIVO){
@@ -355,7 +367,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
         }
         else {
             console.log('Error semantico los tipos no se puede volver negativo');
-            return undefined;
+            return instruccion.nuevoError("Semantico","Error semantico: No se puede hacer negativo los tipos" + valorIzq.tipo , undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.ADICION){
@@ -368,7 +380,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
         }
         else {
             console.log('Error semantico de ++');
-            return undefined;
+            return instruccion.nuevoError("Semantico","Error semantico: No se pueden adicionar a" + valorIzq.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.SUSTRACCION){
@@ -380,8 +392,8 @@ function procesarexpresion(expresion, tsglobal, tslocal){
             return { tipo:tipoDato.DOUBLE, valor: valorIzq.valor-1 };
         }
         else {
-            console.log('Error semantico de ++');
-            return undefined;
+            console.log('Error semantico de --');
+            return instruccion.nuevoError("Semantico","Error semantico: No se pueden sustraer de a" + valorIzq.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.IGUALDAD){
@@ -398,7 +410,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("===", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden igualar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.DOUBLE:
                 switch(valorDer.tipo){
@@ -410,7 +422,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("===", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden igualar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.CHAR:
                 switch(valorDer.tipo){
@@ -422,7 +434,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("===", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden igualar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.BOOL:
                 switch(valorDer.tipo) {
@@ -430,7 +442,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo: tipoDato.BOOL, valor: comparar("===", valorIzq, valorDer)};
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden igualar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.STRING:
                 switch(valorDer.tipo){
@@ -438,11 +450,11 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("===", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden igualar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             default:
                 console.log("ERROR de tipos");
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden igualar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.DIFERENTE){
@@ -459,7 +471,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("!==", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden compalar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.DOUBLE:
                 switch(valorDer.tipo){
@@ -471,7 +483,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("!==", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden compalar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.CHAR:
                 switch(valorDer.tipo){
@@ -483,7 +495,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("!==", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden compalar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.BOOL:
                 switch(valorDer.tipo){
@@ -491,7 +503,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("!==", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden compalar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.STRING:
                 switch(valorDer.tipo){
@@ -499,11 +511,11 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("!==", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden compalar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             default:
                 console.log("ERROR de tipos");
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden compalar los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.MENOR){
@@ -520,7 +532,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("<", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar < los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.DOUBLE:
                 switch(valorDer.tipo){
@@ -532,7 +544,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("<", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar  < los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.CHAR:
                 switch(valorDer.tipo){
@@ -544,11 +556,11 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("<", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar < los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             default:
                 console.log("ERROR de tipos");
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar < los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.MENORIGUAL){
@@ -565,7 +577,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("<=", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar <= los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.DOUBLE:
                 switch(valorDer.tipo){
@@ -577,7 +589,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("<=", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar <= los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.CHAR:
                 switch(valorDer.tipo){
@@ -589,11 +601,11 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("<=", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar <= los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             default:
                 console.log("ERROR de tipos");
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar <= los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.MAYOR){
@@ -610,7 +622,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar(">", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar > los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.DOUBLE:
                 switch(valorDer.tipo){
@@ -622,7 +634,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar(">", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar > los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.CHAR:
                 switch(valorDer.tipo){
@@ -634,11 +646,11 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar(">", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar > los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             default:
                 console.log("ERROR de tipos");
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar > los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.MAYORIGUAL){
@@ -655,7 +667,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar(">=", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar >= los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.DOUBLE:
                 switch(valorDer.tipo){
@@ -667,7 +679,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar(">=", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar >= los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             case tipoDato.CHAR:
                 switch(valorDer.tipo){
@@ -679,11 +691,11 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar(">=", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar >= los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             default:
                 console.log("ERROR de tipos");
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar >= los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.AND){
@@ -696,11 +708,11 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("&&", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar && los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             default:
                 console.log("ERROR de tipos");
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar && los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.OR){
@@ -713,11 +725,11 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                         return {tipo:tipoDato.BOOL, valor: comparar("||", valorIzq, valorDer) };
                     default:
                         console.log("ERROR de tipos");
-                        return undefined;
+                        return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar || los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
                 }
             default:
                 console.log("ERROR de tipos");
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden comparar || los tipos" + valorIzq.tipo + " y "+ valorDer.tipo, undefined, undefined);
         }
     }
     else if(expresion.tipo === tipoOperacion.NOT){
@@ -727,7 +739,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
                 return { tipo:tipoDato.BOOL, valor:!valorIzq.valor };
             default:
                 console.log("ERROR de tipos");
-                return undefined;
+                return instruccion.nuevoError("Semantico","Error semantico: No se pueden negar el tipo" + valorIzq.tipo, undefined, undefined);
         }
     }
 
@@ -749,6 +761,7 @@ function procesarexpresion(expresion, tsglobal, tslocal){
         valor = valor.replace(/\\r/g, "\r");
         valor = valor.replace(/\\'/g, "\'");
         valor = valor.replace(/\\"/g, "\"");
+        valor = valor.replace(/\\\\"/g, "\\");
         return { tipo:tipoDato.STRING, valor: valor }
     }
     else if(expresion.tipo === tipoValor.IDENTIFICADOR){

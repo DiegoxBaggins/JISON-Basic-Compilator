@@ -1,3 +1,5 @@
+const instruccion = require('../arbol/instrucciones').INSTRUCCION;
+
 const TIPO_DATO = {
     ENTERO:         'VAL_ENTERO',
     DOUBLE:         'VAL_DOUBLE',
@@ -30,7 +32,7 @@ class TablaS {
         let simbolo = this.obtener(id);
         if(simbolo !== undefined){
             console.log("simbolo ya existe");
-            return "Error semantico: Simbolo:" + id + " Ya existe";
+            return instruccion.nuevoError("Semantico","Error semantico: Simbolo:" + id + " Ya existe", linea, columna);
         }else{
             let valorr = {tipo: tipo, valor: valor.valor }
             let valorNuevo = comprobarCasteos(valorr, valor);
@@ -39,7 +41,7 @@ class TablaS {
                 console.log("simbolo registrado con exito");
             }else{
                 console.log('error semantico');
-                return "Error semantico: Simbolo:" + id + " No concuerda con los tipos asignados. T1:" + tipo + " != T2:" + valor.tipo;
+                return instruccion.nuevoError("Semantico","Error semantico: Simbolo:" + id + " No concuerda con los tipos asignados. T1:" + tipo + " != T2:" + valor.tipo, linea, columna);
             }
         }
     }
@@ -52,7 +54,7 @@ class TablaS {
         let valorr = this._simbolos.filter((simbolo) => simbolo.id === id)[0];
         if (valorr === undefined){
             console.log('error no existe la variable');
-            return "Error semantico: Simbolo:" + id + " No existe";
+            return instruccion.nuevoError("Semantico","Error semantico: Simbolo:" + id + " No existe", undefined, undefined);
         }else{
             //console.log(valorr);
             //console.log(valor);
@@ -62,7 +64,44 @@ class TablaS {
             }
             else{
                 console.log("Los tipos no coinciden");
-                return "Error semantico: Simbolo:" + id + " No concuerda con los tipos asignados. T1:" + valorr.tipo + " != T2:" + valor.tipo;
+                return instruccion.nuevoError("Semantico","Error semantico: Simbolo:" + id + " No concuerda con los tipos asignados. T1:" + valorr.tipo + " != T2:" + valor.tipo,  undefined, undefined);
+            }
+        }
+    }
+
+    adicion(id){
+        let valorr = this._simbolos.filter((simbolo) => simbolo.id === id)[0];
+        if (valorr === undefined){
+            console.log('error no existe la variable');
+            return instruccion.nuevoError("Semantico","Error semantico: Simbolo:" + id + " No existe", undefined, undefined);
+        }else{
+            //console.log(valorr);
+            //console.log(valor);
+            if(valorr.tipo === TIPO_DATO.ENTERO || valorr.tipo === TIPO_DATO.DOUBLE){
+                this._simbolos.filter((simbolo) => simbolo.id === id)[0].valor = valorr.valor + 1;
+            }
+            else{
+                console.log("Los tipos no coinciden");
+                return instruccion.nuevoError("Semantico","Error semantico: Simbolo:" + id + " No se puede adicionar a un dato de tipo " + valorr.tipo, undefined, undefined);
+            }
+        }
+    }
+
+    sustraccion(id){
+        let valorr = this._simbolos.filter((simbolo) => simbolo.id === id)[0];
+        if (valorr === undefined){
+            console.log('error no existe la variable');
+            return instruccion.nuevoError("Semantico","Error semantico: Simbolo:" + id + " No existe", undefined, undefined);
+        }else{
+            //console.log(valorr);
+            //console.log(valor);
+            if(valorr.tipo === TIPO_DATO.ENTERO || valorr.tipo === TIPO_DATO.DOUBLE){
+                this._simbolos.filter((simbolo) => simbolo.id === id)[0].valor = valorr.valor - 1;
+            }
+            else{
+                console.log("Los tipos no coinciden");
+
+                return instruccion.nuevoError("Semantico","Error semantico: Simbolo:" + id + " No se puede adicionar a un dato de tipo " + valorr.tipo, undefined, undefined);
             }
         }
     }
