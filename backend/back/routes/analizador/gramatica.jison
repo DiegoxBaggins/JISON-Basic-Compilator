@@ -94,7 +94,7 @@
 [0-9]+\b                        return 'ENTERO';
 ([a-zA-Z])[a-zA-Z0-9_]*         return 'IDENTIFICADOR';
 \'[^\']\'                       { yytext = yytext.substr(1, yyleng-2); return 'CHAR'; }
-\".*\"                          { yytext = yytext.substr(1, yyleng-2); return 'CADENA'; }
+["\""]([^"\""])*["\""]                          { yytext = yytext.substr(1, yyleng-2); return 'CADENA'; }
 
 //con slash invertido o con problemas
 "\n"                return 'SALTOLINEA';
